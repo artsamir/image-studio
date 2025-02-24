@@ -1,0 +1,310 @@
+/* Mobile View */
+@media (max-width: 1240px) {
+    .navbar {
+        flex-direction: column;
+    }
+
+    .drag-box {
+        width: 100%;        
+    }
+
+    .preview-box {        
+        width: 100%;                      
+    } 
+
+    .nav-links li {
+        position: relative;
+        margin: 0 15px;
+    }
+
+    .logo img {
+        height: 40px;        
+    }
+
+    .search-box.active {
+        width: 200px;
+        padding: 8px 15px;
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@media (max-width: 970px) {
+    .navbar {
+        flex-direction: row;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        width: 350px;
+        height: 100vh;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        position: fixed;
+        top: 0;
+        right: -350px;
+        box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        z-index: 1001;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+        text-align: left;
+        padding: 0 20px;
+    }
+
+    .submenu {
+        position: static;
+        display: none;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+    }
+
+    .has-submenu:hover .submenu {
+        display: none;
+    }
+
+    .has-submenu.active .submenu {
+        display: block;
+    }
+
+    .search-container {
+        margin-left: auto;
+        margin-right: 10px;
+    }
+
+    .search-box.active {
+        width: 250px;
+    }
+    
+    #heading-text {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    /* Heading text */
+    h1.cb {
+        color: #333;
+        text-shadow: 2px 2px 4px #ecd3e0, -2px -2px 4px #4461e0;
+        font-size: 2.7rem;
+        margin-bottom: 5px;
+        letter-spacing: 1.5px;
+    }
+    
+    h2 {
+        margin-top: auto;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+        color: #333;
+    }
+
+    .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 90%;
+    }
+    
+    .drag-box {
+        border: 2px dashed #007bff;
+        width: 100%;
+        padding: 30px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .drag-box p {
+        margin: 10px 0;
+        color: #555;
+    }
+    
+    .drag-box span {
+        color: #007bff;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .upload-icon {
+        width: 50px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+    
+    .preview-box {
+        margin: 20px 0;
+        height: 512px; 
+        width: 100%;
+        padding: 30px;
+        border-radius: 10px;               
+    }    
+    
+}
+
+@media (max-width: 768px) {
+    .menu-icon {
+        display: block;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        width: 310px;
+        height: 100vh;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        position: fixed;
+        top: 0;
+        right: -310px;
+        box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        z-index: 1001;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+        text-align: left;
+        padding: 0 20px;
+    }
+
+    .submenu {
+        position: static;
+        display: none;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+    }
+
+    .has-submenu:hover .submenu {
+        display: none;
+    }
+
+    .has-submenu.active .submenu {
+        display: block;
+    }
+
+    .search-container {
+        margin-left: auto;
+        margin-right: 10px;
+    }
+
+    .search-box.active {
+        width: 150px;
+    }
+
+    /* Overlay */
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .overlay.active {
+        display: block;
+    }
+
+    #heading-text {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    /* Heading text */
+    h1.cb {
+        color: #333;
+        text-shadow: 2px 2px 4px #ecd3e0, -2px -2px 4px #4461e0;
+        font-size: 2.5rem;
+        margin-bottom: 5px;
+        letter-spacing: 1.5px;
+    }
+    
+    h2 {
+        margin-top: auto;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+        color: #333;
+        font-size: 1.3rem;
+    }
+
+    .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 90%;
+    }
+    
+    .drag-box {
+        border: 2px dashed #007bff;
+        width: 100%;
+        padding: 30px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        cursor: pointer;
+        position: relative;
+    }    
+    
+    .preview-box {
+        margin: 20px 0;
+        height: 512px; 
+        width: 100%;
+        padding: 30px;
+        border-radius: 10px;               
+    }    
+    
+}
+
+@media (max-width: 567px) {
+    h1.cb {
+        color: #333;
+        text-shadow: 2px 2px 4px #ecd3e0, -2px -2px 4px #4461e0;
+        font-size: 2rem;
+        margin-bottom: 5px;
+        letter-spacing: 1.5px;
+    }
+    
+    h2 {
+        margin-top: auto;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+        color: #333;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 430px) {
+    h1.cb {
+        color: #333;
+        text-shadow: 2px 2px 4px #ecd3e0, -2px -2px 4px #4461e0;
+        font-size: 1.7rem;
+        margin-bottom: 5px;
+        letter-spacing: 1.5px;
+    }
+    
+    h2 {
+        margin-top: auto;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+        color: #333;
+        font-size: 1rem;
+    }
+}
