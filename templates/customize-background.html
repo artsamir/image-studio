@@ -22,7 +22,7 @@
         }
         
         #content {
-            height: 2000px; /* Add lots of content for scrolling */
+            height: auto; /* Add lots of content for scrolling */
         }
     </style>
 
@@ -123,6 +123,17 @@
             <div class="right-section">
                 <button id="remove-bg-btn" disabled>Remove Background</button>
                 <button id="bg-image-btn">Add Background</button>
+                    <div id="bg-image-options">
+                        <div style="display: flex; flex-wrap: wrap;">
+                            <p id="bg-img-title" style="position: absolute;">Backgrounds</p>
+                            <button id="close-bg-options" style="position: absolute; right: 5px; top: 5px">X</button>
+                            <img src="{{ url_for('static', filename='site-images/background/bkimg2.jpg') }}" class="bg-option" data-bg="bkimg2.jpg">
+                            <img src="{{ url_for('static', filename='site-images/background/bkimg3.jpg') }}" class="bg-option" data-bg="bkimg3.jpg">
+                            <img src="{{ url_for('static', filename='site-images/background/bkimg1.jpg') }}" class="bg-option" data-bg="bkimg1.jpg">
+                            <img src="{{ url_for('static', filename='site-images/background/bkimg5.jpg') }}" class="bg-option" data-bg="bkimg5.jpg">
+                            <img src="{{ url_for('static', filename='site-images/background/bkimg6.jpg') }}" class="bg-option" data-bg="bkimg6.jpg">
+                        </div>
+                    </div> 
                 <button id="bg-color-btn">Add Color</button>
                     <div class="bg-color-options" id="bg-color-options" style="display: none;">
                         <p id="bg-color-title" style="position: absolute;">Colors</p>
@@ -146,17 +157,8 @@
                         <input type="color" class="color-picker" id="colorPicker">
                     </div>
                 <!-- <input type="color" class="color-picker" id="colorPicker">  -->
-            </div>
-        
-            <div id="bg-image-options" style="display: none; position: absolute; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px;">
-                <div style="display: flex; flex-wrap: wrap;">
-                    <img src="{{ url_for('static', filename='site-images/background/bkimg1.jpg') }}" class="bg-option" data-bg="bkimg1.jpg" style="width: 50px; height: 50px; margin: 5px; cursor: pointer;">
-                    <img src="{{ url_for('static', filename='site-images/background/bkimg2.jpg') }}" class="bg-option" data-bg="bkimg2.jpg" style="width: 50px; height: 50px; margin: 5px; cursor: pointer;">
-                    <img src="{{ url_for('static', filename='site-images/background/bkimg3.jpg') }}" class="bg-option" data-bg="bkimg3.jpg" style="width: 50px; height: 50px; margin: 5px; cursor: pointer;">
-                    <img src="{{ url_for('static', filename='site-images/background/bkimg5.jpg') }}" class="bg-option" data-bg="bkimg5.jpg" style="width: 50px; height: 50px; margin: 5px; cursor: pointer;">
-                    <img src="{{ url_for('static', filename='site-images/background/bkimg6.jpg') }}" class="bg-option" data-bg="bkimg6.jpg" style="width: 50px; height: 50px; margin: 5px; cursor: pointer;">
-                </div>
-            </div>        
+            </div>       
+                   
             
         </div>
 

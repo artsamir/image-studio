@@ -244,13 +244,15 @@ h2 {
     margin: 20px auto;
     width: 790px;
     height: 512px;
-    background: #f0f0f0;
+    background-image: url('static/site-images/transperent.jpg'); /* Replace with your image path */
+    background-size: cover; /* Adjust as needed: cover, contain, or specific dimensions */
+    background-repeat: no-repeat; /* Prevent image repetition */
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     border-radius: 10px;
-    overflow: hidden; /* Ensure the zoomed image doesn't overflow */
+    overflow: hidden;
 }
 
 
@@ -259,6 +261,7 @@ h2 {
     margin: 0;
     padding: 0;
     border: none;
+    background-image: url('static/site-images/transperent.jpg');
     /* max-width: 100%;
     max-height: 100%; */
     width: 100%;
@@ -458,6 +461,40 @@ a.hidden {
     left: 40%;
     letter-spacing: 2px;
 }
+/* Add Background features ---------------------------- */
+#bg-image-options {
+    display: none;
+    position: absolute;
+    margin-top: 144px;
+    padding: 15px;
+    padding-top: 40px;
+    background: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    grid-template-columns: repeat(4, 50px);
+    gap: 10px;
+    width: max-content;
+}
+
+.bg-option {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#close-bg-options {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    background-color: #e8dbdb;
+    border: none;
+}
+
+#bg-img-title {
+    top: 10px;
+    left: 40%;
+    letter-spacing: 2px;
+}
 
 /* Specific Button Icons */
 #remove-bg-btn::before {
@@ -471,14 +508,14 @@ a.hidden {
     content: "\f019";
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
-    margin-right: 8px;
+    margin-right: 8px;    
 }
 
 #bg-image-btn::before {
     content: "\f03e";
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
-    margin-right: 8px;
+    margin-right: 8px;    
 }
 
 #bg-color-btn::before {
@@ -486,6 +523,10 @@ a.hidden {
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     margin-right: 8px;
+}
+
+#download-btn, #bg-image-btn, #bg-color-btn {
+    display: none;
 }
 
 /* Disabled Button Style */
@@ -550,7 +591,7 @@ button:disabled {
 
     .container {
         flex-direction: column;
-        width: 71%; /* Increased container width */
+        width: 80%; /* Increased container width */
         padding: 20px; /* Added padding to container */
         margin: 20px auto; /* Centered container */
     }
@@ -560,7 +601,7 @@ button:disabled {
     }
 
     .preview-box {
-        width: 100%;
+        width: 90%;
         aspect-ratio: 16 / 9; /* Set a default aspect ratio */
         background: #f0f0f0;
         border-radius: 10px;
@@ -771,8 +812,9 @@ button:disabled {
     .preview-box {
         margin: 20px auto;
         /* height: 512px;  */
-        width: 100%;
-        padding: 30px;
+        width: 90%;
+        aspect-ratio: 16 / 9;
+        padding: 20px;
         border-radius: 10px;               
     }   
     
@@ -901,8 +943,9 @@ button:disabled {
     .preview-box {
         margin: 20px auto;
         /* height: 512px;  */
-        width: 100%;
-        padding: 30px;
+        width: 98%;
+        aspect-ratio: 16 / 9;
+        padding: 15px;
         border-radius: 10px;               
     }   
     
@@ -947,6 +990,20 @@ button:disabled {
     .preview-controls {
         flex-direction: column;
     }
+
+    .preview-box {
+        width: 100%; /* Full width on small screens */
+        aspect-ratio: 16 / 9;
+        margin: 10px auto;
+        padding: 10px;
+    }
+
+    #preview-image {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border-radius: 8px;
+    }
 }
 
 @media (max-width: 430px) {
@@ -977,5 +1034,19 @@ button:disabled {
 
     .preview-controls {
         flex-direction: column;
+    }
+
+    .preview-box {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        margin: 5px auto;
+        padding: 5px;
+    }
+
+    #preview-image {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border-radius: 8px;
     }
 }
