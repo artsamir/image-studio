@@ -32,9 +32,39 @@ document.addEventListener('DOMContentLoaded', function () {
     const downloadBtn = document.getElementById("download-btn");
     const previewContainer = document.getElementById('preview-container');
     const magnifierBtn = document.getElementById('magnifier-btn');
-    const bgImageOptions = document.getElementById('bg-image-options');
+    const bgImageOptions = document.getElementById('bg-image-options');    
+
+    // For color select validation
+    const bgColorBtn = document.querySelector('bg-color-btn');
+    const bgColorOptions = document.getElementById('bg-color-options');
+    console.log("bgColorBtn:", bgColorBtn); // Check if button is found
+    console.log("bgColorOptions:", bgColorOptions); // Check if color options are found
+    const mixColor = document.getElementById('mixColor');
+    const colorPicker = document.getElementById('colorPicker');
+    const colorOptionsContainer = document.createElement('div');
+    const addColorBtn = document.getElementById("bg-color-btn");
+    const colorOptions = document.getElementById("bg-color-options");
+    // const colorOptions = document.getElementById("color-options");
+    const colorItems = document.querySelectorAll(".color-item");
+    const mixColorBtn = document.getElementById("mixColor");
+    const closeBtn = document.getElementById('close-color-options');
+
+
+    colorOptionsContainer.id = 'color-options-container';
+    colorOptionsContainer.style.display = 'none';
+    colorOptionsContainer.style.position = 'absolute';
+    colorOptionsContainer.style.background = 'white';
+    colorOptionsContainer.style.border = '1px solid #ccc';
+    colorOptionsContainer.style.padding = '10px';
+    colorOptionsContainer.style.zIndex = '1001'; // Ensure it's above other elements
+
+    
+
+    document.body.appendChild(colorOptionsContainer);
+
 
     let isMagnifierEnabled = false;
+    // For zoom effect start validation
     let scale = 1;
     const zoomIncrement = 0.1;
     let translateX = 0;
@@ -42,13 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isDragging = false;
     let startX, startY;
 
-    // For color select validation
-    const bgColorBtn = document.getElementById('bg-color-btn');
-    const bgColorOptions = document.getElementById('bg-color-options');
-    const mixColorBtn = document.getElementById('mixColor');
-    const colorPicker = document.getElementById('colorPicker');
-    const colorItems = document.querySelectorAll('.color-item');
-    const closeColorOptions = document.getElementById('close-color-options');  
+    // End validation zoom effect     
     
     // Toggle menu
     menuIcon.addEventListener('click', function () {
@@ -108,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function () {
             item.classList.remove('active');
         });
     }
-
 
     // Zomm handle -----------------------------
     document.getElementById('zoom-in-btn').addEventListener('click', () => {
@@ -360,6 +383,57 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+
+    // Background customize option - color, background
+    function hideOptions(event) {
+        if (!event.target.closest('#bg-image-options') && bgImageOptions.style.display === 'block') {
+            bgImageOptions.style.display = 'none';
+        }
+        if (!event.target.closest('#bg-color-options') && bgColorOptions.style.display === 'block') {
+            bgColorOptions.style.display = 'none';
+        }
+    }
+
+    document.getElementById('bg-image-btn').addEventListener('click', () => {
+        bgImageOptions.style.display = 'block';
+        bgColorOptions.style.display = 'none';
+    });
+
+    document.getElementById('bg-color-btn').addEventListener('click', () => {
+        colorOptionsContainer.style.display = 'block';
+        bgImageOptions.style.display = 'none';
+    });
+
+    document.querySelectorAll('.bg-option').forEach(option => {
+        option.addEventListener('click', () => {
+            const bg = option.dataset.bg;
+            previewContainer.style.backgroundImage = `url('site-images/background/${bg}')`;
+            previewContainer.style.backgroundSize = 'cover';
+            previewContainer.style.backgroundRepeat = 'no-repeat';
+            previewContainer.style.backgroundColor = '';
+            bgImageOptions.style.display = 'none';
+    
+            // draw background image to canvas
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const bgImg = new Image();
+            bgImg.onload = function() {
+                canvas.width = previewContainer.offsetWidth;
+                canvas.height = previewContainer.offsetHeight;
+                ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+    
+                const previewImg = new Image();
+                previewImg.onload = function(){
+                    ctx.drawImage(previewImg,0,0, canvas.width, canvas.height);
+                    previewImage.src = canvas.toDataURL('image/png');
+                }
+                previewImg.src = previewImage.src;
+            }
+            bgImg.src = `site-images/background/${bg}`;
+    
+        });
+    });
+
     
     downloadBtn.addEventListener('click', function(event) {
         event.preventDefault();
@@ -428,47 +502,50 @@ document.addEventListener('DOMContentLoaded', function () {
     // ----------- ------------------------- Create color options ----------------------------
     // =======================================================================================
     
-    if (bgColorBtn && bgColorOptions) {
-        // Toggle color options on button click
-        bgColorBtn.addEventListener('click', function () {
-            bgColorOptions.style.display = bgColorOptions.style.display === 'grid' ? 'none' : 'grid';
-        });
 
-        // Close color options on "X" click
-        closeColorOptions.addEventListener('click', function () {
+    bgColorBtn.addEventListener('click', function() {
+        console.log("Button clicked!"); // Check if click event is firing
+        bgColorOptions.style.display = bgColorOptions.style.display === 'block' ? 'none' : 'block';
+        console.log("bgColorOptions display:", bgColorOptions.style.display); //check the display style.
+    });
+    
+    // Toggle color options on button click
+    bgColorBtn.addEventListener('click', function() {
+        bgColorOptions.style.display = bgColorOptions.style.display === 'none' ? 'grid' : 'none';
+    });
+
+    // Close color options on "X" click
+    closeColorOptions.addEventListener('click', function() {
+        bgColorOptions.style.display = 'none';
+    });
+
+    // Close color options when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!bgColorBtn.contains(event.target) && !bgColorOptions.contains(event.target)) {
             bgColorOptions.style.display = 'none';
-        });
+        }
+    });
 
-        // Close color options when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!bgColorBtn.contains(event.target) && !bgColorOptions.contains(event.target)) {
-                bgColorOptions.style.display = 'none';
-            }
-        });
-
-        // Apply selected color from predefined options
-        colorItems.forEach(item => {
-            item.addEventListener('click', function () {
-                let selectedColor = item.style.backgroundColor;
-                previewContainer.style.backgroundColor = selectedColor;
-                bgColorOptions.style.display = 'none'; // Close options after selection
-            });
-        });
-
-        // Show color picker when "Mix Color" is clicked
-        mixColorBtn.addEventListener('click', function () {
-            colorPicker.click(); // Open color picker
-        });
-
-        // Apply selected color from color picker
-        colorPicker.addEventListener('input', function () {
-            previewContainer.style.backgroundColor = colorPicker.value;
+    // Apply selected color from predefined options
+    colorItems.forEach(item => {
+        item.addEventListener("click", function () {
+            let selectedColor = item.style.backgroundColor;
+            previewContainer.style.backgroundColor = selectedColor;
             bgColorOptions.style.display = 'none'; // Close options after selection
         });
-    } else {
-        console.log('bg-color-btn or bg-color-options not found');
-    }
+    });
 
+    // Show color picker when "Mix Color" is clicked
+    mixColorBtn.addEventListener("click", function () {
+        colorPicker.click(); // Open color picker
+    });
+
+    // Apply selected color from color picker
+    colorPicker.addEventListener("input", function () {
+        previewContainer.style.backgroundColor = colorPicker.value;
+        bgColorOptions.style.display = 'none'; // Close options after selection
+    });
+   
 
 
 });

@@ -38,9 +38,9 @@
                 <li class="has-submenu">
                     <a href="#">Image Studio <i class="fas fa-caret-down"></i></a>
                     <ul class="submenu">
+                        <li><a href="{{ url_for('combined_photo') }}">Combine Images</a></li>
                         <li><a href="{{ url_for('photoresizer') }}">Resize Photo</a></li>
                         <li><a href="{{ url_for('photoeditor') }}">Photo Editor</a></li>
-                        <li><a href="#">Combine Images</a></li>
                         <li><a href="#">Passport PrintReady</a></li>
                     </ul>
                 </li>
@@ -90,7 +90,7 @@
         </div>
         <div class="container">
             <div class="left-section">
-                <div id="drop-area" class="drag-box">
+                <div id="drop-area" class="drag-box" onclick="document.getElementById('fileInput').click()">
                     <input type="file" id="fileInput" accept="image/*" hidden>
                     <img src="{{ url_for('static', filename='site-images/upload-icon.png') }}" alt="Upload" class="upload-icon">
                     <p>Drag & Drop an image here or <span onclick="document.getElementById('fileInput').click()">Browse</span></p>
@@ -125,7 +125,8 @@
                 <button id="bg-image-btn">Add Background</button>
                 <button id="bg-color-btn">Add Color</button>
                     <div class="bg-color-options" id="bg-color-options" style="display: none;">
-                        <button id="close-color-options" style="position: absolute; right: 5px;">X</button>
+                        <p id="bg-color-title" style="position: absolute;">Colors</p>
+                        <button id="close-color-options" style="position: absolute; right: 5px; top: 5px">X</button>
                         <div class="color-item" style="background-color: #FF0000;"></div>
                         <div class="color-item" style="background-color: #2196F3;"></div>
                         <div class="color-item" style="background-color: #FFFF00;"></div>

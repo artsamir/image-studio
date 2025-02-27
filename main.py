@@ -67,6 +67,10 @@ def index():
 def customize_background():
     return render_template('customize-background.html')
 
+@app.route('/combined-photo')
+def combined_photo():
+    return render_template('combined-photo.html')
+
 @app.route('/pdf-compress')
 def pdfcompress():
     return render_template('pdf-compress.html')
