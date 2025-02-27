@@ -576,7 +576,7 @@ button:disabled {
         border-radius: 8px;
     }
 
-    element.style {
+    /* element.style {
         position: absolute;
         top: 0px;
         left: 0px;
@@ -587,7 +587,7 @@ button:disabled {
         padding: 0px;
         border: none;
         cursor: grab;
-    }
+    } */
 
     .right-section {
         flex: 1;

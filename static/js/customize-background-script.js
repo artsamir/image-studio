@@ -210,81 +210,41 @@ document.addEventListener('DOMContentLoaded', function () {
         const previewContainer = document.getElementById('preview-container');
         const screenWidth = window.innerWidth;
     
+        let containerWidth, containerHeight;
+    
         if (screenWidth >= 1440) {
-            if (height > width) {
-                previewContainer.style.width = '378px';
-                previewContainer.style.height = '576px';
-            } else {
-                previewContainer.style.width = '864px';
-                previewContainer.style.height = '455px';
-            }
+            containerWidth = height > width ? '378px' : '864px';
+            containerHeight = height > width ? '576px' : '455px';
         } else if (screenWidth >= 1240) {
-            if (height > width) {
-                previewContainer.style.width = '378px';
-                previewContainer.style.height = '576px';
-            } else {
-                previewContainer.style.width = '663px';
-                previewContainer.style.height = '350px';
-            }
+            containerWidth = height > width ? '378px' : '663px';
+            containerHeight = height > width ? '576px' : '350px';
         } else if (screenWidth >= 970) {
-            if (height > width) {
-                previewContainer.style.width = '328px';
-                previewContainer.style.height = '476px';
-            } else {
-                previewContainer.style.width = '532px';
-                previewContainer.style.height = '289px';
-            }
+            containerWidth = height > width ? '328px' : '532px';
+            containerHeight = height > width ? '476px' : '289px';
         } else if (screenWidth >= 768) {
-            if (height > width) {
-                previewContainer.style.width = '328px';
-                previewContainer.style.height = '476px';
-            } else {
-                previewContainer.style.width = '490px';
-                previewContainer.style.height = '289px';
-            }
+            containerWidth = height > width ? '328px' : '490px';
+            containerHeight = height > width ? '476px' : '289px';
         } else if (screenWidth >= 577) {
-            if (height > width) {
-                previewContainer.style.width = '328px';
-                previewContainer.style.height = '476px';
-            } else {
-                previewContainer.style.width = '478px';
-                previewContainer.style.height = '289px';
-            }
+            containerWidth = height > width ? '328px' : '478px';
+            containerHeight = height > width ? '476px' : '289px';
         } else if (screenWidth >= 430) {
-            if (height > width) {
-                previewContainer.style.width = '300px';
-                previewContainer.style.height = '436px';
-            } else {
-                previewContainer.style.width = '313px';
-                previewContainer.style.height = '189px';
-            }
+            containerWidth = height > width ? '300px' : '313px';
+            containerHeight = height > width ? '436px' : '189px';
         } else if (screenWidth >= 366) {
-            if (height > width) {
-                previewContainer.style.width = '268px';
-                previewContainer.style.height = '436px';
-            } else {
-                previewContainer.style.width = '289px';
-                previewContainer.style.height = '189px';
-            }
+            containerWidth = height > width ? '268px' : '289px';
+            containerHeight = height > width ? '436px' : '189px';
         } else if (screenWidth >= 313) {
-            if (height > width) {
-                previewContainer.style.width = '238px';
-                previewContainer.style.height = '436px';
-            } else {
-                previewContainer.style.width = '159px';
-                previewContainer.style.height = '89px';
-            }
+            containerWidth = height > width ? '238px' : '159px';
+            containerHeight = height > width ? '436px' : '89px';
         } else { // Handle screenWidth < 313
-            if (height > width) {
-                previewContainer.style.width = '138px';
-                previewContainer.style.height = '476px';
-            } else {
-                previewContainer.style.width = '159px';
-                previewContainer.style.height = '89px';
-            }
+            containerWidth = height > width ? '138px' : '159px';
+            containerHeight = height > width ? '476px' : '89px';
         }
+    
+        previewContainer.style.width = containerWidth;
+        previewContainer.style.height = containerHeight;
     }
-
+    
     magnifierBtn.addEventListener('click', function () {
         isMagnifierEnabled = !isMagnifierEnabled; // Toggle magnifier state
         magnifierBtn.classList.toggle('active', isMagnifierEnabled); // Toggle button active state
