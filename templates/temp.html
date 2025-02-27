@@ -12,7 +12,7 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pdf-compress-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/combined-photo-styles.css') }}">
 
     <style>
         .navbar {
@@ -81,49 +81,9 @@
         <!-- Dark Overlay -->
         <div class="overlay" id="overlay"></div>
     </header> 
-    <div class="body-area">
-        <div class="container">
-            <h1>PDF Compressor</h1>
-            <div id="drop-zone" class="drop-zone">
-                <p id="drop-text">Drag & Drop your PDF here or click to upload</p>
-                <div id="file-info" class="file-info hidden">
-                    <p>File: <span id="file-name"></span></p>
-                    <p>Size: <span id="file-size"></span></p>
-                </div>
-                <input type="file" id="file-input" accept=".pdf" hidden>
-            </div>
-            <div id="preview" class="preview hidden">
-                <h3>Preview</h3>
-                <iframe id="pdf-preview" width="100%" height="400px"></iframe>
-            </div>
-            <div id="options" class="options hidden">
-                <label for="dpi">DPI:</label>
-                <select id="dpi">
-                    <option value="96">72 (Low Quality)</option>
-                    <option value="180">96</option>
-                    <option value="180">180</option>
-                    <option value="180">300</option>
-                    <option value="360">360</option>
-                    <option value="600">600</option>
-                    <option value="720">720 (High Quality)</option>
-                    <option value="1200">1200 (Very High Quality)</option>
-                </select>
-                <label for="target-size">Target Size (KB):</label>
-                <input type="number" id="target-size" placeholder="e.g., 700">
-                <button id="compress-btn" class="compress-btn">Compress</button>
-            </div>
-            <div id="result" class="result hidden">
-                <p>Original Size: <span id="original-size"></span></p>
-                <p>Compressed Size: <span id="compressed-size"></span></p>
-                <button id="download-btn" class="download-btn">Download</button>
-            </div>
-            <div id="processing" class="processing hidden">
-                <div class="spinner"></div>
-                <p>Processing...</p>
-            </div>
-        </div>
-    </div>
-    <script src="{{ url_for('static', filename='js/navbar-body-script.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/pdf-compress-script.js') }}"></script>
+
+
+    <script src="{{ url_for('static', filename='js/combined-photo-script.js') }}"></script>
+
 </body>
 </html>

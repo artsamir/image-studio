@@ -2,16 +2,15 @@ from flask import Flask, render_template, request, send_file, jsonify, send_from
 import os
 import io
 import logging
+import subprocess
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfReader, PdfWriter
 from PIL import Image
 from rembg import remove
 from io import BytesIO
 
-
-
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -22,18 +21,17 @@ UPLOAD_FOLDER = "static/uploads"
 OUTPUT_FOLDER = "static/outputs"
 STATIC_FOLDER = 'static'
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+COMPRESSED_FOLDER = 'compressed_files'
 ALLOWED_PDF_EXTENSIONS = {'pdf'}
-
 
 # Ensure required folders exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 os.makedirs(STATIC_FOLDER, exist_ok=True)
-
+os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024  # 30MB limit <====================
-
+app.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024  # 30MB limit
 
 # Helper functions
 def allowed_image_file(filename):
@@ -41,7 +39,6 @@ def allowed_image_file(filename):
 
 def allowed_pdf_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_PDF_EXTENSIONS
-
 
 # Serve sitemap.xml
 @app.route('/robots.txt')
@@ -56,9 +53,7 @@ def sitemap():
 def serve_sitemap():
     return send_from_directory(STATIC_FOLDER, 'sitemap.xml')
 
-# Route controls ----------------------------------------------------------
-# -------------------------------------------------------------------------
-
+# Route controls
 @app.route('/')
 def index():
     return render_template('customize-background.html')
@@ -90,7 +85,6 @@ def webp_png_converter():
 @app.route('/about')
 def about():
     return render_template('about.html')
-
 
 # Remove Background Logic
 @app.route("/remove-bg", methods=["POST"])
@@ -177,54 +171,133 @@ def resize():
 # ==================================================================================================
 #                  PDF Compression Logic
 # ===================================================================================================
-def compress_pdf(input_path, output_path, dpi=300, quality=5, target_reduction=50, target_size=None):
+def compress_pdf(input_path, output_path, dpi, target_size_kb=None):
     try:
-        reader = PdfReader(input_path)
-        writer = PdfWriter()
+        logger.info(f"Compressing {input_path} to {output_path} with DPI {dpi}, Target {target_size_kb} KB")
+        original_size = os.path.getsize(input_path) / 1024
 
-        with open(output_path, 'wb') as output_file:
-            writer.write(output_file)
+        # Initial compression with given DPI
+        cmd = [
+            'gs',
+            '-sDEVICE=pdfwrite',
+            '-dCompatibilityLevel=1.4',
+            '-dPDFSETTINGS=/screen',
+            f'-dColorImageResolution={dpi}',
+            '-dNOPAUSE', '-dQUIET', '-dBATCH',
+            f'-sOutputFile={output_path}',
+            input_path
+        ]
+        subprocess.run(cmd, check=True)
+        compressed_size = os.path.getsize(output_path) / 1024
+        logger.info(f"Initial compression: {compressed_size:.2f} KB")
 
-        compressed_size = os.path.getsize(output_path)
-        return compressed_size
+        # Adjust to stay within ±5% if target_size_kb is specified
+        if target_size_kb:
+            current_dpi = dpi
+            temp_output = output_path + '.tmp'
+            best_output = output_path
+            best_size = compressed_size
+
+            min_size = target_size_kb * 0.95  # e.g., 665 KB for 700 KB
+            max_size = target_size_kb * 1.05  # e.g., 735 KB for 700 KB
+
+            while compressed_size > max_size and current_dpi > 10:
+                current_dpi = max(int(current_dpi * (target_size_kb / compressed_size)), 10)
+                logger.info(f"Re-compressing with DPI {current_dpi} to approach {target_size_kb} KB")
+                cmd = [
+                    'gs',
+                    '-sDEVICE=pdfwrite',
+                    '-dCompatibilityLevel=1.4',
+                    '-dPDFSETTINGS=/screen',
+                    f'-dColorImageResolution={current_dpi}',
+                    '-dNOPAUSE', '-dQUIET', '-dBATCH',
+                    f'-sOutputFile={temp_output}',
+                    output_path
+                ]
+                subprocess.run(cmd, check=True)
+                compressed_size = os.path.getsize(temp_output) / 1024
+                logger.info(f"New size: {compressed_size:.2f} KB")
+
+                if min_size <= compressed_size <= max_size:
+                    os.replace(temp_output, output_path)
+                    break
+                elif compressed_size < min_size:
+                    if abs(best_size - target_size_kb) < abs(compressed_size - target_size_kb):
+                        compressed_size = best_size
+                    else:
+                        os.replace(temp_output, output_path)
+                        compressed_size = compressed_size
+                    break
+                elif abs(compressed_size - target_size_kb) < abs(best_size - target_size_kb):
+                    os.replace(temp_output, output_path)
+                    best_size = compressed_size
+                else:
+                    break
+
+            if os.path.exists(temp_output):
+                os.remove(temp_output)
+
+        logger.info(f"Final: Original {original_size:.2f} KB, Compressed {compressed_size:.2f} KB")
+        return original_size, compressed_size
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Ghostscript error: {str(e)}")
+        raise Exception(f"Compression failed: {str(e)}")
     except Exception as e:
-        logger.error(f"Error during PDF compression: {str(e)}")
-        raise
-
-@app.route('/compress', methods=['POST'])
-def compress():
+        logger.error(f"Unexpected error: {str(e)}")
+        raise Exception(f"Compression failed: {str(e)}")
+    
+@app.route('/upload', methods=['POST'])
+def upload_file():
     try:
+        logger.info("Received upload request")
         if 'file' not in request.files:
-            return jsonify({'error': 'No file part'}), 400
-
+            logger.error("No file part in request")
+            return jsonify({'error': 'No file part in the request'}), 400
         file = request.files['file']
-        if not file or not allowed_pdf_file(file.filename):
-            return jsonify({'error': 'Invalid file type'}), 400
-
-        dpi = int(request.form.get('dpi', 300))
-        quality = int(request.form.get('quality', 5))
-        target_reduction = int(request.form.get('target_reduction', 50))
-        target_size = request.form.get('target_size')
-
-        original_filename = secure_filename(file.filename)
-        original_path = os.path.join(app.config['UPLOAD_FOLDER'], original_filename)
-        file.save(original_path)
-
-        compressed_path = os.path.join(app.config['UPLOAD_FOLDER'], f"compressed_{original_filename}")
-        original_size = os.path.getsize(original_path)
-        compressed_size = compress_pdf(original_path, compressed_path, dpi, quality, target_reduction, target_size)
-
-        os.remove(original_path)
-
-        reduction = ((original_size - compressed_size) / original_size) * 100
-        return jsonify({'filename': f"compressed_{original_filename}", 'original_size': original_size, 'compressed_size': compressed_size, 'reduction': reduction})
+        if file.filename == '':
+            logger.error("No file selected")
+            return jsonify({'error': 'No file selected'}), 400
+        
+        input_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        logger.info(f"Saving file to {input_path}")
+        file.save(input_path)
+        file_size = os.path.getsize(input_path) / 1024
+        logger.info(f"File saved: {file.filename}, Size: {file_size:.2f} KB")
+        return jsonify({
+            'filename': file.filename,
+            'file_size': f'{file_size:.2f} KB'
+        })
     except Exception as e:
-        logger.error(f"Error processing PDF: {str(e)}")
+        logger.error(f"Upload failed: {str(e)}")
+        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+    
+@app.route('/compress', methods=['POST'])
+def compress_file():
+    try:
+        data = request.get_json()
+        filename = data['filename']
+        dpi = int(data['dpi'])
+        target_size = float(data['target_size']) if data['target_size'] else None
+        
+        input_path = os.path.join(UPLOAD_FOLDER, filename)
+        output_filename = 'compressed_' + filename
+        output_path = os.path.join(COMPRESSED_FOLDER, output_filename)
+        
+        original_size, compressed_size = compress_pdf(input_path, output_path, dpi, target_size)
+        
+        logger.info(f"Compression complete: Original {original_size:.2f} KB, Compressed {compressed_size:.2f} KB")
+        return jsonify({
+            'original_size': f'{original_size:.2f} KB',
+            'compressed_size': f'{compressed_size:.2f} KB',
+            'download_path': f'/download/{output_filename}'
+        })
+    except Exception as e:
+        logger.error(f"Compression route error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+    return send_from_directory(COMPRESSED_FOLDER, filename, as_attachment=True)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Use Railway's provided port
