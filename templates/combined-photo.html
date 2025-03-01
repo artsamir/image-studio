@@ -82,7 +82,17 @@
         <div class="overlay" id="overlay"></div>
     </header> 
 
+    <div class="container">
+        <h1>Combine Two Images to Passport Size</h1>
+        <input type="file" id="image1" accept="image/*">
+        <input type="file" id="image2" accept="image/*">
+        <button onclick="combineImages()">Combine Images</button>
+        <div id="result">
+            <img id="outputImage" alt="Result will appear here">
+        </div>
+    </div>
 
+    <script src="{{ url_for('static', filename='js/navbar-body-script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/combined-photo-script.js') }}"></script>
 
 </body>
