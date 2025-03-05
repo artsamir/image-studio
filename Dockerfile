@@ -26,4 +26,4 @@ COPY . .
 EXPOSE 5000
 
 # Command to run the app with Gunicorn
-CMD ["gunicorn", "-w", "2", "-k", "gthread", "-b", "0.0.0.0:5000", "main:app"]
+CMD ["gunicorn", "--timeout", "120", "-w", "2", "-b", "0.0.0.0:$PORT", "main:app"]
