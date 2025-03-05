@@ -128,7 +128,7 @@ convertBtn.addEventListener('click', async () => {
         processingOverlay.style.display = 'flex';
         const finishProgress = await simulateProgress();
 
-        const response = await fetch('/convert-to-webp', {
+        const response = await fetch('/convert-to-svg', {
             method: 'POST',
             body: formData
         });
@@ -142,9 +142,8 @@ convertBtn.addEventListener('click', async () => {
         const zip = await JSZip.loadAsync(blob);
         await Promise.all(Object.entries(zip.files).map(async ([filename, file]) => {
             const fileBlob = await file.async('blob');
-            const convertedFile = new File([fileBlob], filename, { type: 'image/webp' });
-            convertedFiles.push(convertedFile);
-
+            const convertedFile = new File([fileBlob], filename, { type: 'image/svg+xml' }); // Correct MIME type
+        
             const reader = new FileReader();
             reader.onload = (e) => {
                 const div = document.createElement('div');

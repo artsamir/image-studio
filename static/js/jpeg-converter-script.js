@@ -128,7 +128,7 @@ convertBtn.addEventListener('click', async () => {
         processingOverlay.style.display = 'flex';
         const finishProgress = await simulateProgress();
 
-        const response = await fetch('/convert-to-webp', {
+        const response = await fetch('/convert-to-jpeg', {
             method: 'POST',
             body: formData
         });

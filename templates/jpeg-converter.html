@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/image-converter-styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/webp-converter-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jpeg-converter-styles.css') }}">
 </head>
 <body>
     <!-- ------------------------ Navbar Section ------------------------------------------- -->
@@ -72,19 +72,17 @@
     </header>
 
     <!-- --------------------------------------- body part convert webp area start here --------------------------------- -->
-
+     
     <div class="container">
-        <h1><span>Any Image to </span>WebP Converter <span>(Max 170 files)</span></h1>
+        <h1><span>Any Image to </span>JPEG Converter <span>(Max 170 files)</span></h1>
         <p class="file-types">Accepted types: .jpg, .jpeg, .png, .bmp, .heic, .svg, .webp, .tiff, .psd, .pdf, .ai, .indd, .raw, .eps</p>
     
-        <!-- Drag & Drop Zone -->
         <div id="dropZone" class="drop-zone">
             <img src="{{ url_for('static', filename='site-images/upload-icon.png') }}" alt="Upload" class="upload-icon">
             <p><strong>Drag & Drop Images Here</strong> or <span class="upload-text">Click to Upload</span></p>
             <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.bmp,.heic,.svg,.webp,.tiff,.psd,.pdf,.ai,.indd,.raw,.eps">
         </div>
     
-        <!-- Uploaded Preview -->
         <div class="preview-container">
             <h2>Uploaded Image</h2>
             <div id="uploadPreview" class="upload-preview"></div>
@@ -95,19 +93,15 @@
             <p>Total Size (GB): <span id="totalSizeGB">0</span></p>
         </div>        
     
-        <!-- Convert Button -->
-        <button id="convertBtn" disabled>Convert to WebP</button>
+        <button id="convertBtn" disabled>Convert to JPEG</button>
     
-        <!-- Converted Images -->
         <div class="preview-container">
             <h2>Converted Image</h2>
             <div id="convertedPreview" class="converted-preview"></div>
         </div>
     
-        <!-- Download ZIP Button -->
         <button id="downloadBtn" disabled>Download</button>
     
-        <!-- Processing Overlay -->
         <div id="processingOverlay" class="processing-overlay">
             <div class="processing-content">
                 <div class="spinner"></div>
@@ -121,10 +115,10 @@
     </div>
     
 
+    <script src="{{ url_for('static', filename='js/jpeg-converter-script.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> 
 
     <script src="{{ url_for('static', filename='js/navbar-body-script.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/webp-converter-script.js') }}"></script>
 
 </body>
 </html>

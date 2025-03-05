@@ -10,6 +10,9 @@ from backend.customize_background import customize_bp
 from backend.pdf_compress import pdf_compress_bp 
 from backend.photo_resizer import photo_resizer_bp
 from backend.webp_converter import convert_to_webp
+from backend.jpeg_converter import convert_to_jpeg
+from backend.png_converter import convert_to_png
+from backend.svg_converter import convert_to_svg
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -79,6 +82,18 @@ def photoeditor():
 def webp_converter():
     return render_template('webp-converter.html')
 
+@app.route('/jpeg-converter')
+def jpeg_converter():
+    return render_template('jpeg-converter.html')
+
+@app.route('/png-converter')
+def png_converter():
+    return render_template('png-converter.html')
+
+@app.route('/svg-converter')
+def svg_converter():
+    return render_template('svg-converter.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -95,6 +110,63 @@ def convert_images():
             return jsonify({'error': 'No files uploaded'}), 400
 
         zip_buffer = convert_to_webp(files)
+        
+        return send_file(
+            zip_buffer,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name='converted_images.zip'
+        )
+    except Exception as e:
+        logger.error(f"Error in conversion: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/convert-to-jpeg', methods=['POST'])
+def convert_images_to_jpeg():
+    try:
+        files = request.files.getlist('images')
+        if not files:
+            return jsonify({'error': 'No files uploaded'}), 400
+
+        zip_buffer = convert_to_jpeg(files)
+        
+        return send_file(
+            zip_buffer,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name='converted_images.zip'
+        )
+    except Exception as e:
+        logger.error(f"Error in conversion: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/convert-to-png', methods=['POST'])
+def convert_images_to_png():
+    try:
+        files = request.files.getlist('images')
+        if not files:
+            return jsonify({'error': 'No files uploaded'}), 400
+
+        zip_buffer = convert_to_png(files)
+        
+        return send_file(
+            zip_buffer,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name='converted_images.zip'
+        )
+    except Exception as e:
+        logger.error(f"Error in conversion: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/convert-to-svg', methods=['POST'])
+def convert_images_to_svg():
+    try:
+        files = request.files.getlist('images')
+        if not files:
+            return jsonify({'error': 'No files uploaded'}), 400
+
+        zip_buffer = convert_to_svg(files)
         
         return send_file(
             zip_buffer,
