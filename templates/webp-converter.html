@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/image-converter-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/webp-converter-styles.css') }}">
 </head>
 <body>
     <!-- ------------------------ Navbar Section ------------------------------------------- -->
@@ -35,12 +36,13 @@
                 <li class="has-submenu">
                     <a href="#">Convert Images <i class="fas fa-caret-down"></i></a>
                     <ul class="submenu">
-                        <li><a href="{{ url_for('webp_png_converter') }}">WebP to PNG/JPG</a></li>
-                        <li><a href="#">JPG to WebP</a></li>
-                        <li><a href="#">PNG to WebP</a></li>
-                        <li><a href="#">PNG to JPG/JPEG</a></li>
-                        <li><a href="#">Image to TIFF</a></li>
-                        <li><a href="#">Image to PDF</a></li>
+                        <li><a href="{{ url_for('webp_converter') }}"><i>Image</i> to <b>WebP</b></a></li>
+                        <li><a href="#"><i>Image</i> to <b>JPEG</b></a></li>
+                        <li><a href="#"><i>Image</i> to <b>PNG</b></a></li>
+                        <li><a href="#"><i>Image</i> to <b>SVG</b></a></li>
+                        <li><a href="#"><i>Image</i> to <b>TIFF</b></a></li>
+                        <li><a href="#"><i>Image</i> to <b>PDF</b></a></li>
+                        <li><a href="#"><i>Image</i> to <b>GIF</b></a></li>
                     </ul>
                 </li>
                 <li class="has-submenu">
@@ -69,9 +71,48 @@
         <div class="overlay" id="overlay"></div>
     </header>
 
-    
+    <!-- --------------------------------------- body part convert webp area start here --------------------------------- -->
+
+    <div class="container">
+        <h1>Any Image to WebP Converter (Max 100 files)</h1>
+        <p>Accepted type (.jpg, .jpeg, .png, .bmp, .heic, .svg, .webp, .tiff, .psd, .pdf, .ai,. indd, .raw, .eps)</p>
+        
+        <div id="dropZone" class="drop-zone">
+            <p>Drag & Drop Images Here or Click to Upload</p>
+            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.bmp,.heic,.svg,.webp,.tiff,.psd,.pdf,.ai,.indd,.raw,.eps">
+        </div>
+
+        <div class="preview-container">
+            <h2>Uploaded Images</h2>
+            <div id="uploadPreview" class="upload-preview"></div>
+        </div>
+
+        <button id="convertBtn" disabled>Convert to WebP</button>
+
+        <div class="preview-container">
+            <h2>Converted Images</h2>
+            <div id="convertedPreview" class="converted-preview"></div>
+        </div>
+
+        <button id="downloadBtn" disabled>Download All as ZIP</button>
+
+        <!-- Processing Overlay -->
+        <div id="processingOverlay" class="processing-overlay">
+            <div class="processing-content">
+                <div class="spinner"></div>
+                <p>Converting Images...</p>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <span id="progressText">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> 
 
     <script src="{{ url_for('static', filename='js/image-converter-script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/webp-converter-script.js') }}"></script>
 
 </body>
 </html>

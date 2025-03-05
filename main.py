@@ -1,16 +1,15 @@
 from flask import Flask, render_template, request, send_file, jsonify, send_from_directory
-import os #customize_background, pdf_compress
+import os
 import io
-import logging #customize_background, pdf_compress
+import logging
 import subprocess
 from werkzeug.utils import secure_filename
-# from PyPDF2 import PdfReader, PdfWriter
 
-from backend.combined_photo import combine_bp  # Adjusted import path
+from backend.combined_photo import combine_bp
 from backend.customize_background import customize_bp
 from backend.pdf_compress import pdf_compress_bp 
 from backend.photo_resizer import photo_resizer_bp
-
+from backend.webp_converter import convert_to_webp
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -33,17 +32,16 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 os.makedirs(STATIC_FOLDER, exist_ok=True)
 os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
 
-# Register the Blueprint from backend/combined-photo.py
-app.register_blueprint(combine_bp)  # Combined Photo
-app.register_blueprint(customize_bp)  # Background customization
-app.register_blueprint(pdf_compress_bp)  # PDF compression
-app.register_blueprint(photo_resizer_bp)  # Image resizing
+# Register Blueprints
+app.register_blueprint(combine_bp)
+app.register_blueprint(customize_bp)
+app.register_blueprint(pdf_compress_bp)
+app.register_blueprint(photo_resizer_bp)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024  # 30MB limit
+app.config['MAX_CONTENT_LENGTH'] = 1500 * 1024 * 1024  # Increased to 100MB
 
-
-# Serve sitemap.xml
+# Serve static files
 @app.route('/robots.txt')
 def robots():
     return send_from_directory('static', 'robots.txt')
@@ -52,11 +50,7 @@ def robots():
 def sitemap():
     return send_from_directory('static', 'sitemap.xml')
 
-@app.route('/sitemap.xml')
-def serve_sitemap():
-    return send_from_directory(STATIC_FOLDER, 'sitemap.xml')
-
-# Route controls
+# Routes for different pages
 @app.route('/')
 def index():
     return render_template('customize-background.html')
@@ -68,11 +62,6 @@ def customize_background():
 @app.route('/combined-photo')
 def combined_photo():
     return render_template('combined-photo.html')
-
-# Serve static files (CSS and JS)
-@app.route('/<path:path>')
-def send_static(path):
-    return send_from_directory('static', path)
 
 @app.route('/pdf-compress')
 def pdfcompress():
@@ -86,14 +75,37 @@ def photoresizer():
 def photoeditor():
     return render_template('photo-editor.html')
 
-@app.route('/webp-png-converter')
-def webp_png_converter():
-    return render_template('webp-png-converter.html')
+@app.route('/webp-converter')
+def webp_converter():
+    return render_template('webp-converter.html')
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+@app.route('/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
+
+@app.route('/convert-to-webp', methods=['POST'])
+def convert_images():
+    try:
+        files = request.files.getlist('images')
+        if not files:
+            return jsonify({'error': 'No files uploaded'}), 400
+
+        zip_buffer = convert_to_webp(files)
+        
+        return send_file(
+            zip_buffer,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name='converted_images.zip'
+        )
+    except Exception as e:
+        logger.error(f"Error in conversion: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Use Railway's provided port
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
