@@ -2,17 +2,15 @@ import io
 import zipfile
 import logging
 import cairosvg
-from cairosvg import exceptions
+from PIL import Image
+import img2pdf
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 def convert_to_svg(files):
     zip_buffer = io.BytesIO()
-    supported_formats = {
-        'jpg', 'jpeg', 'png', 'bmp', 'heic', 'svg', 'webp', 'tiff', 'psd',
-        'pdf', 'ai', 'indd', 'raw', 'eps'
-    }
+    supported_formats = {'jpg', 'jpeg', 'png', 'bmp', 'webp', 'tiff', 'svg', 'pdf'}
 
     try:
         with zipfile.ZipFile(zip_buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zip_file:
@@ -30,23 +28,20 @@ def convert_to_svg(files):
                     if ext == 'svg':
                         logger.debug(f"File is already SVG, adding to zip: {filename}")
                         zip_file.writestr(file.filename, file.read())
+                    elif ext in {'jpg', 'jpeg', 'png', 'bmp', 'webp', 'tiff'}:
+                        logger.debug(f"Converting raster image to SVG: {filename}")
+                        img = Image.open(file)
+                        svg_output = io.BytesIO()
+                        img.save(svg_output, format="PNG")  # Convert to PNG (for tracing)
+                        svg_data = cairosvg.png2svg(bytestring=svg_output.getvalue())  # Convert to SVG
+                        output_filename = file.filename.rsplit('.', 1)[0] + '.svg'
+                        zip_file.writestr(output_filename, svg_data)
+                        logger.debug(f"Successfully converted and added to zip: {output_filename}")
                     else:
-                        logger.debug(f"Converting to SVG: {filename}")
-                        try:
-                            img_bytes = file.read()
-                            svg_bytes = cairosvg.svg2svg(bytestring=img_bytes)
-                            output_filename = file.filename.rsplit('.', 1)[0] + '.svg'
-                            zip_file.writestr(output_filename, svg_bytes)
-                            logger.debug(f"Successfully converted and added to zip: {output_filename}")
-                        except exceptions.CairoSVGError as e:  # Corrected exception handling
-                            logger.error(f"CairoSVG error converting {filename}: {e}")
-                            continue  # Skip to the next file
-                        except Exception as e:
-                            logger.error(f"Error reading or processing {filename}: {e}")
-                            continue # Skip to the next file
+                        logger.error(f"Cannot process format: {ext}")
 
                 except Exception as e:
-                    logger.error(f"General error processing {file.filename}: {str(e)}")
+                    logger.error(f"Error processing {file.filename}: {str(e)}")
                     continue
 
         zip_buffer.seek(0)
