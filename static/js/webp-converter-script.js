@@ -33,33 +33,62 @@ fileInput.addEventListener('change', (e) => {
 });
 
 function handleFiles(files) {
-    const newFiles = Array.from(files).slice(0, 300 - uploadedFiles.length);
-    uploadedFiles = [...uploadedFiles, ...newFiles];
+    const newFiles = Array.from(files)//.slice(0, 170 - uploadedFiles.length);    
     
-    if (uploadedFiles.length > 300) {
-        uploadedFiles = uploadedFiles.slice(0, 300);
-        alert('Maximum limit of 300 files reached');
+    if (uploadedFiles.length + newFiles.length > 171) {
+        // uploadedFiles = uploadedFiles.slice(0, 170);
+        alert('Maximum limit of 170 files reached');
+        return; // Stop execution and prevent adding any files
     }
     
+    // If within limit, proceed with adding files
+    uploadedFiles = [...uploadedFiles, ...newFiles];
     renderUploadPreview();
+    updateUploadSummary(); // Call this function to update count and size
     convertBtn.disabled = uploadedFiles.length === 0;
     downloadBtn.disabled = true;
 }
 
+function updateUploadSummary() {
+    const totalImages = uploadedFiles.length;
+    const totalSizeKB = uploadedFiles.reduce((acc, file) => acc + file.size, 0) / 1024; // Convert to KB
+    const totalSizeGB = totalSizeKB / 1024 / 1024; // Convert KB to GB
+
+    document.getElementById('totalImages').textContent = totalImages;
+    document.getElementById('totalSize').textContent = totalSizeKB.toFixed(2) + ' KB';
+    document.getElementById('totalSizeGB').textContent = totalSizeGB.toFixed(4) + ' GB'; // Show up to 4 decimal places
+}
+
+
 function renderUploadPreview() {
     uploadPreview.innerHTML = '';
-    uploadedFiles.forEach((file) => {
+    uploadedFiles.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const div = document.createElement('div');
             div.className = 'upload-item';
             div.innerHTML = `
-                <img src="${e.target.result}">
+                <img src="${e.target.result}" alt="Uploaded Image">
                 <span>${file.name} (${(file.size / 1024).toFixed(2)} KB)</span>
+                <button id="remove-btn" data-index="${index}">X</button>
             `;
             uploadPreview.appendChild(div);
         };
         reader.readAsDataURL(file);
+    });
+    updateUploadSummary(); // Update total images & size
+    setTimeout(attachRemoveEvents, 100); // Delay to ensure buttons are rendered
+    // attachRemoveEvents(); // Attach remove event handlers
+}
+
+function attachRemoveEvents() {
+    document.querySelectorAll('#remove-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            uploadedFiles.splice(index, 1); // Remove the file from array
+            renderUploadPreview(); // Re-render list
+            convertBtn.disabled = uploadedFiles.length === 0; // Disable Convert if empty
+        });
     });
 }
 
@@ -120,21 +149,31 @@ convertBtn.addEventListener('click', async () => {
             reader.onload = (e) => {
                 const div = document.createElement('div');
                 div.className = 'grid-item';
-                div.innerHTML = `
-                    <img src="${e.target.result}">
-                    <img class="large-view" src="${e.target.result}">
-                `;
+                div.innerHTML = `<img src="${e.target.result}" class="preview-img">`;
                 convertedPreview.appendChild(div);
-
-                const img = div.querySelector('img:not(.large-view)');
-                const largeView = div.querySelector('.large-view');
-                img.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (activeLargeView && activeLargeView !== largeView) {
-                        activeLargeView.style.display = 'none';
+            
+                div.addEventListener('click', (event) => {
+                    event.stopPropagation();
+            
+                    // Remove existing large view before adding a new one
+                    if (document.querySelector('.large-view-container')) {
+                        document.querySelector('.large-view-container').remove();
                     }
-                    largeView.style.display = largeView.style.display === 'block' ? 'none' : 'block';
-                    activeLargeView = largeView.style.display === 'block' ? largeView : null;
+            
+                    // Create large image view
+                    const largeViewContainer = document.createElement('div');
+                    largeViewContainer.className = 'large-view-container';
+                    largeViewContainer.innerHTML = `
+                        <img src="${e.target.result}" class="large-view-img">
+                    `;
+                    document.body.appendChild(largeViewContainer);
+            
+                    // Close when clicking outside the image
+                    largeViewContainer.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('large-view-img')) {
+                            largeViewContainer.remove();
+                        }
+                    });
                 });
             };
             reader.readAsDataURL(convertedFile);

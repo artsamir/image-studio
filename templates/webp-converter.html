@@ -74,28 +74,39 @@
     <!-- --------------------------------------- body part convert webp area start here --------------------------------- -->
 
     <div class="container">
-        <h1>Any Image to WebP Converter (Max 100 files)</h1>
-        <p>Accepted type (.jpg, .jpeg, .png, .bmp, .heic, .svg, .webp, .tiff, .psd, .pdf, .ai,. indd, .raw, .eps)</p>
-        
+        <h1>WebP Converter <span>(Max 170 files)</span></h1>
+        <p class="file-types">Accepted types: .jpg, .jpeg, .png, .bmp, .heic, .svg, .webp, .tiff, .psd, .pdf, .ai, .indd, .raw, .eps</p>
+    
+        <!-- Drag & Drop Zone -->
         <div id="dropZone" class="drop-zone">
-            <p>Drag & Drop Images Here or Click to Upload</p>
+            <img src="{{ url_for('static', filename='site-images/upload-icon.png') }}" alt="Upload" class="upload-icon">
+            <p><strong>Drag & Drop Images Here</strong> or <span class="upload-text">Click to Upload</span></p>
             <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.bmp,.heic,.svg,.webp,.tiff,.psd,.pdf,.ai,.indd,.raw,.eps">
         </div>
-
+    
+        <!-- Uploaded Preview -->
         <div class="preview-container">
-            <h2>Uploaded Images</h2>
+            <h2>Uploaded Image</h2>
             <div id="uploadPreview" class="upload-preview"></div>
         </div>
-
+        <div id="uploadSummary" class="upload-summary">
+            <p>Total Images: <span id="totalImages">0</span></p>
+            <p>Total Size: <span id="totalSize">0 KB</span></p>
+            <p>Total Size (GB): <span id="totalSizeGB">0</span></p>
+        </div>        
+    
+        <!-- Convert Button -->
         <button id="convertBtn" disabled>Convert to WebP</button>
-
+    
+        <!-- Converted Images -->
         <div class="preview-container">
-            <h2>Converted Images</h2>
+            <h2>Converted Image</h2>
             <div id="convertedPreview" class="converted-preview"></div>
         </div>
-
-        <button id="downloadBtn" disabled>Download All as ZIP</button>
-
+    
+        <!-- Download ZIP Button -->
+        <button id="downloadBtn" disabled>Download</button>
+    
         <!-- Processing Overlay -->
         <div id="processingOverlay" class="processing-overlay">
             <div class="processing-content">
@@ -108,6 +119,7 @@
             </div>
         </div>
     </div>
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> 
 

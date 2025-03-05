@@ -26,7 +26,7 @@ def convert_to_webp(files):
     
     try:
         with zipfile.ZipFile(zip_buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zip_file:
-            for file in files[:300]:  # Limit to 300 files
+            for file in files[:170]:  # Limit to 170 files
                 try:
                     filename = file.filename.lower()
                     ext = filename.rsplit('.', 1)[-1] if '.' in filename else ''
