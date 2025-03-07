@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/customize-background-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer-styles.css') }}">
 
     <style>
         .navbar {
@@ -158,10 +159,46 @@
                         <input type="color" class="color-picker" id="colorPicker">
                     </div>
                 <!-- <input type="color" class="color-picker" id="colorPicker">  -->
-            </div>       
-                   
+            </div>                      
             
         </div>
+
+    <!-- -------------------------- Footer Part start here ---------------------------------------------- -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='site-images/logo-len1-trans.png') }}" alt="CutCompress Logo">
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('customize_background') }}">Background Remover</a></li>
+                    <li><a href="{{ url_for('photoresizer') }}">Resize Photo</a></li>
+                    <li><a href="{{ url_for('webp_converter') }}">JPG/PNG to WebP Converter</a></li>
+                    <li><a href="{{ url_for('pdfcompress') }}">PDF Compressor</a></li>
+                    <li><a href="{{ url_for('combined_photo') }}">Combine Two Image</a></li>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p>Email: <a href="mailto:support@cutcompress.com">support@cutcompress.com</a></p>
+                <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 CutCompress. All Rights Reserved.</p>
+        </div>
+    </footer> 
 
     <script src="{{ url_for('static', filename='js/customize-background-script.js') }}"></script>
 

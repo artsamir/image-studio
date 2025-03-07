@@ -28,7 +28,7 @@
                     <ul class="submenu">
                         <li><a href="{{ url_for('photoresizer') }}">Resize Photo</a></li>
                         <li><a href="{{ url_for('photoeditor') }}">Photo Editor</a></li>
-                        <li><a href="#">Combine Images</a></li>
+                        <li><a href="{{ url_for('combined_photo') }}">Combine Images</a></li>
                         <li><a href="#">Passport PrintReady</a></li>
                     </ul>
                 </li>
@@ -118,8 +118,213 @@
                 <span id="progressText">0%</span>
             </div>
         </div>
-    </div>
-    
+    </div>    
+
+    <!-- -------------------------- Blog Section Start Here ---------------------------------------------- -->
+        
+    <section class="blog-section"> 
+        <div class="blog-container">
+
+        <h3>How Long Does It Take to Convertion <!-- with Multiple Users? --></h3>
+        <!-- <p>Here’s how much time it takes to convert pictures to WebP when many people (over 10) are using the site at once. This is based on a real test with 10 pictures (16MB total) taking 50 seconds, hosted on Railway.app with 8GB RAM and 8 cores. Sizes range from 300KB to 5MB.</p> -->
+        <table>
+            <tr>
+                <th>Number of Pictures</th>
+                <th>Time (Seconds)</th>
+                <th>Time (Minutes)</th>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>50</td>
+                <td>~0.8 (50 sec)</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>68</td>
+                <td>~1.1 (1 min 8 sec)</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td>91</td>
+                <td>~1.5 (1 min 31 sec)</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td>136</td>
+                <td>~2.3 (2 min 16 sec)</td>
+            </tr>
+            <tr>
+                <td>70</td>
+                <td>181</td>
+                <td>~3.0 (3 min 1 sec)</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>242</td>
+                <td>~4.0 (4 min 2 sec)</td>
+            </tr>
+            <tr>
+                <td>130</td>
+                <td>304</td>
+                <td>~5.1 (5 min 4 sec)</td>
+            </tr>
+            <tr>
+                <td>170</td>
+                <td>391</td>
+                <td>~6.5 (6 min 31 sec)</td>
+            </tr>
+        </table>
+        <!-- <p>With lots of users, 10 pictures take 50 seconds, and 170 pictures take about 6.5 minutes. Times may vary depending on how busy the site is!</p> -->
+        
+
+            <h2>Understanding the WebP Converter on CutCompress</h2>
+            <p>Have you ever noticed how some pictures take a long time to load on a website or use up too much space on your device? The WebP Converter on CutCompress can solve that. It’s a free tool that changes your pictures into a smaller, faster format called WebP. This guide will explain what it does, why it’s useful, and how you can use it—no matter your age or experience!</p>
+
+            <h3>What is WebP?</h3>
+            <p>WebP is a type of picture format created by Google. It’s designed to make pictures smaller without losing their quality. Smaller pictures are great because they load quickly on websites and don’t take up much space on your computer, phone, or tablet. Think of it like packing a suitcase: WebP fits more into less space, but everything still looks just as good.</p>
+            <p>Regular picture formats like JPG or PNG can be large and slow. WebP is different—it shrinks them down and even adds features like see-through backgrounds or movement, which some other formats can’t do. It’s a smart way to handle pictures in today’s fast-moving online world.</p>
+
+            <h3>Why Use the WebP Converter?</h3>
+            <p>The WebP Converter on CutCompress is a simple way to improve your pictures. Here’s why it’s worth trying:</p>
+            <ul>
+                <li><strong>Smaller Size:</strong> It reduces the size of your pictures, saving space on your device or website.</li>
+                <li><strong>Faster Loading:</strong> Smaller pictures mean websites open faster, so people don’t wait around.</li>
+                <li><strong>More Options:</strong> WebP can have clear backgrounds or move like a short video—features you don’t get with every format.</li>
+                <li><strong>Free to Use:</strong> There’s no cost, and it’s easy for anyone to try.</li>
+            </ul>
+            <p>If you’ve ever been frustrated by slow websites or big files that won’t send, WebP can make things smoother and quicker.</p>
+
+            <h3>How to Use the WebP Converter</h3>
+            <p>Using this tool is straightforward. Here’s a step-by-step guide:</p>
+            <ol>
+                <li><strong>Pick Your Pictures:</strong> Choose the pictures you want to change. You can use up to 170 at once.</li>
+                <li><strong>Add Them:</strong> Drag your pictures into the box above or click “Click to Upload” to select them.</li>
+                <li><strong>Check Your Choices:</strong> Look at the “Uploaded Image” section to see your pictures and make sure they’re correct.</li>
+                <li><strong>Convert Them:</strong> Press the “Convert to WebP” button. A progress bar will show how it’s going.</li>
+                <li><strong>Download:</strong> When it’s finished, click “Download” to save your new WebP pictures—either one at a time or all in a ZIP file.</li>
+            </ol>
+            <p>It takes just a few minutes, and you’ll have smaller, faster pictures ready to use!</p>
+
+            <h3>Who Benefits from This Tool?</h3>
+            <p>The WebP Converter is helpful for all kinds of people. Here are some examples:</p>
+            <ul>
+                <li><strong>Students:</strong> If you’re working on a school project with lots of pictures, WebP can make them smaller so they’re easier to share with teachers or classmates.</li>
+                <li><strong>Shop Owners:</strong> People who sell things online can use WebP to show product pictures that load quickly, keeping customers happy.</li>
+                <li><strong>Writers and Bloggers:</strong> If you write articles online, WebP makes your pages faster, so readers stick around.</li>
+                <li><strong>Everyday Users:</strong> Anyone with family photos or travel snapshots can shrink them to save space or send them easily.</li>
+            </ul>
+            <p>No matter who you are, if you deal with pictures, this tool can make your life easier.</p>
+
+            <h3>How WebP Stacks Up Against Other Formats</h3>
+            <p>Not all picture formats are the same. Here’s a table to show how WebP compares:</p>
+            <table>
+                <tr>
+                    <th>Format</th>
+                    <th>Size</th>
+                    <th>Clear Background?</th>
+                    <th>Movement?</th>
+                </tr>
+                <tr>
+                    <td>JPG</td>
+                    <td>Medium to Large</td>
+                    <td>No</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>PNG</td>
+                    <td>Large</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>GIF</td>
+                    <td>Medium</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>WebP</td>
+                    <td>Small</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                </tr>
+            </table>
+            <p>JPG works well for photos but doesn’t support clear backgrounds or movement. PNG is good for sharp designs with transparency, but it takes up a lot of space. GIF can move, but it’s not the smallest. WebP stands out because it’s small and can do more than the others.</p>
+
+            <h3>What Happens During Conversion?</h3>
+            <p>When you use the WebP Converter, it changes your picture in a few ways:</p>
+            <ul>
+                <li><strong>Size Drops:</strong> A 1MB JPG might become a 700KB WebP—less space, same look.</li>
+                <li><strong>Quality Stays:</strong> Even though it’s smaller, the picture doesn’t get blurry or messy.</li>
+                <li><strong>New Features:</strong> A JPG can gain a clear background, or a PNG can shrink without losing sharpness.</li>
+            </ul>
+            <p>It’s like squeezing a sponge—it gets smaller but still holds its shape. This makes your pictures better for websites or sharing.</p>
+
+            <h3>Real-Life Examples</h3>
+            <p>Here’s how WebP can help in everyday situations:</p>
+            <ul>
+                <li><strong>Project Presentation:</strong> You’ve got 50 photos for a report, each 2MB as JPGs. That’s 100MB total. Convert them to WebP, and they drop to 1.4MB each—70MB total. Your file opens faster, and your teacher or boss is impressed!</li>
+                <li><strong>Online Shop:</strong> Someone sells clothes online, but their big pictures slow down the site. After using WebP, the pictures load quickly, and more people buy stuff.</li>
+                <li><strong>Family Sharing:</strong> You have 100 vacation photos too large to email. WebP shrinks them, and your relatives see them without trouble.</li>
+                <li><strong>Blog Post:</strong> A writer adds 20 pictures to an article. Switching to WebP cuts the page size in half, and readers enjoy a faster experience.</li>
+            </ul>
+            <p>These examples show how WebP makes things quicker and easier, no matter what you’re doing.</p>
+
+            <h3>Tips for Using the WebP Converter</h3>
+            <p>Want to get the most out of this tool? Here are some ideas:</p>
+            <ul>
+                <li><strong>Do Many at Once:</strong> Load up to 170 pictures to save time instead of doing them one by one.</li>
+                <li><strong>Double-Check:</strong> Use the preview to see your pictures before converting them.</li>
+                <li><strong>Mix with Other Tools:</strong> CutCompress has options like resizing or removing backgrounds—use them with WebP for even better results.</li>
+                <li><strong>Compare Sizes:</strong> After converting, look at how much smaller your pictures got. It’s interesting to see the difference!</li>
+            </ul>
+            <p>These steps can help you work smarter, not harder.</p>
+
+            <h3>Why WebP is Growing</h3>
+            <p>WebP is becoming more popular every year. Most web browsers—like Chrome, Firefox, and Edge—support it, so websites everywhere are using it to speed things up. In 2025, it’s a big part of how the internet works. CutCompress makes it simple for anyone to join in. In the future, they might add more ways to tweak your WebP pictures, like choosing exactly how small they get. For now, it’s already a great tool to have.</p>
+
+            <h3>Give It a Try!</h3>
+            <p>The WebP Converter on CutCompress is free, quick, and simple to use. It’s perfect for anyone who wants smaller, faster pictures—whether you’re a student, a business owner, a writer, or just someone with photos to share. Take a moment to try it: drag some pictures into the box above, press “Convert,” and see how it works. You’ll have better pictures in no time, ready for whatever you need them for!</p>
+        </div>
+    </section>
+    <!-- Blog Section Ends Here -->
+
+    <!-- -------------------------- Footer Part start here ---------------------------------------------- -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='site-images/logo-len1-trans.png') }}" alt="CutCompress Logo">
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('customize_background') }}">Background Remover</a></li>
+                    <li><a href="{{ url_for('photoresizer') }}">Resize Photo</a></li>
+                    <li><a href="{{ url_for('webp_converter') }}">JPG/PNG to WebP Converter</a></li>
+                    <li><a href="{{ url_for('pdfcompress') }}">PDF Compressor</a></li>
+                    <li><a href="{{ url_for('combined_photo') }}">Combine Two Image</a></li>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p>Email: <a href="mailto:support@cutcompress.com">support@cutcompress.com</a></p>
+                <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 CutCompress. All Rights Reserved.</p>
+        </div>
+    </footer>    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> 
 
