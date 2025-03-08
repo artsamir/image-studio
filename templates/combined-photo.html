@@ -12,8 +12,10 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/combined-photo-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/combined-photo-navbar-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/combined-photo-styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         .navbar {
@@ -22,9 +24,9 @@
             padding: 10px 33px;
         }
         
-        #content {
+        /* #content {
             height: 2000px; /* Add lots of content for scrolling */
-        }
+        } */
     </style>
 
 </head>
@@ -84,15 +86,107 @@
         <div class="overlay" id="overlay"></div>
     </header> 
 
-    <div class="container">
-        <h1>Combine Two Images to Passport Size</h1>
-        <input type="file" id="image1" accept="image/*">
-        <input type="file" id="image2" accept="image/*">
-        <button onclick="combineImages()">Combine Images</button>
-        <div id="result">
-            <img id="outputImage" alt="Result will appear here">
+    <!-- ------------------------------- Body Part start here -------------------------------- -->
+    <div class="outer-container">
+        <div class="container">
+            <div class="heading-text">
+                <h1>Combine Two Photos</h1>
+                <h3>in a Single frame</h3>
+                <h3><i>Try to upload Portrait size photo</i></h3>
+            </div>
+
+            <div class="upload-section">
+                <div class="drag-drop" id="drop1">
+                    <img src="{{ url_for('static', filename='site-images/upload-icon.png') }}" alt="upload-icon" class="upload-icon">
+                    <p>Drag & Drop First Image Here</p>
+                    <input type="file" id="image1" accept="image/*" hidden>
+                </div>
+                <div class="preview" id="preview1">
+                    <img id="previewImg1" alt="Preview 1">
+                    <div class="loader" id="loader1"></div>
+                </div>
+                <div id="plusIcon" class="plus-icon">
+                    <img src="{{ url_for('static', filename='site-images/plus-solid.svg') }}" alt="plus-icon">
+                </div>
+                <div class="drag-drop" id="drop2">
+                    <img src="{{ url_for('static', filename='site-images/upload-icon.png') }}" alt="upload-icon" class="upload-icon">
+                    <p>Drag & Drop Second Image Here</p>
+                    <input type="file" id="image2" accept="image/*" hidden>
+                </div>
+                <div class="preview" id="preview2">
+                    <img id="previewImg2" alt="Preview 2">
+                    <div class="loader" id="loader2"></div>
+                </div>
+            </div>
+            <button class="btn" id="combineBtn" onclick="combineImages()">Combine Photos</button>
+            <div class="result-section">
+                <div class="preview" id="resultPreview">
+                    <img id="outputImage" alt="Combined Result">
+                </div>
+                <button class="btn" id="downloadBtn" onclick="downloadImage()">Download</button>
+            </div>
         </div>
     </div>
+
+    <!-- ------------------------ Blog Section ------------------------------------- -->
+    <section class="blog-section">
+        <div class="blog-container">
+            <h2>How to Combine Two Photos Easily with CutCompress</h2>
+            
+            <!-- Page 1: Introduction -->
+            <div class="blog-page">
+                <h3>What is the Combine Photos Tool?</h3>
+                <p>Do you have two photos you want to put together? Maybe you want to make a special picture with a friend or family member. The Combine Photos tool on CutCompress helps you do this quickly. It takes two pictures and joins them side by side into one image. You don’t need any hard software or skills—just a few clicks, and you’re done!</p>
+                <p>This tool is great for making passport-size photos or just keeping memories in one frame. It’s free, easy, and works online, so anyone can use it. Let’s learn how to use it and why it’s helpful.</p>
+            </div>
+
+            <!-- Page 2: Step-by-Step Guide -->
+            <div class="blog-page">
+                <h3>How to Use the Tool: Simple Steps</h3>
+                <p>Here’s how you can combine your photos:</p>
+                <ol>
+                    <li><strong>Upload First Photo</strong>: On the page, you’ll see two boxes. Click the first box or drag your photo into it. The tool will remove the background automatically.</li>
+                    <li><strong>Upload Second Photo</strong>: Do the same for the second box. Drop or click to add your next photo. Wait a moment while it cleans up the background.</li>
+                    <li><strong>Combine Them</strong>: When both photos are ready, click the “Combine Photos” button. The tool will put them together in one picture.</li>
+                    <li><strong>Download</strong>: After combining, you’ll see the final image. Click “Download” to save it to your device.</li>
+                </ol>
+                <p>It’s that simple! The tool does most of the work for you.</p>
+            </div>
+
+            <!-- Page 3: Tips for Best Results -->
+            <div class="blog-page">
+                <h3>Tips to Get the Best Combined Photo</h3>
+                <p>To make your photo look perfect, try these ideas:</p>
+                <ul>
+                    <li><strong>Use Portrait Photos</strong>: Photos that are taller than they are wide work best. They fit nicely into the passport-size frame.</li>
+                    <li><strong>Good Lighting</strong>: Make sure both photos have clear light. Dark or blurry pictures might not look as good.</li>
+                    <li><strong>Simple Backgrounds</strong>: The tool removes backgrounds, but plain ones (like a wall) are easier to clean up.</li>
+                    <li><strong>Same Size</strong>: If possible, use photos that are about the same size. This makes the final image look balanced.</li>
+                </ul>
+                <p>Follow these tips, and your combined photo will look professional!</p>
+            </div>
+
+            <!-- Page 4: Benefits -->
+            <div class="blog-page">
+                <h3>Why Use This Tool?</h3>
+                <p>Here are some reasons this tool is helpful:</p>
+                <ul>
+                    <li><strong>Free to Use</strong>: You don’t pay anything. It’s open for everyone.</li>
+                    <li><strong>Saves Time</strong>: No need to learn complicated programs. It’s fast and ready in seconds.</li>
+                    <li><strong>Easy for All</strong>: Whether you’re young or old, you can use it without trouble.</li>
+                    <li><strong>Perfect for Official Use</strong>: Need a passport photo with two people? This makes it simple.</li>
+                </ul>
+                <p>It’s a handy tool for personal projects or important tasks.</p>
+            </div>
+
+            <!-- Page 5: Conclusion -->
+            <div class="blog-page">
+                <h3>Try It Today!</h3>
+                <p>Combining two photos doesn’t have to be hard. With CutCompress, you get a quick and easy way to join your pictures. Whether it’s for fun, a gift, or something official, this tool is here to help. Start now by uploading your photos above and see how simple it is.</p>
+                <p>Have more photos to work with? Check out our other tools like Background Remover or Photo Resizer. CutCompress has everything you need to make your images better!</p>
+            </div>
+        </div>
+    </section>
 
     <!-- -------------------------- Footer Part start here ---------------------------------------------- -->
     <footer>

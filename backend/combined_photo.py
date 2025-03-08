@@ -1,39 +1,56 @@
-from flask import Blueprint, request, send_file
+from flask import request, send_file
+from rembg import remove
 from PIL import Image
 import io
 
-combine_bp = Blueprint('combine', __name__)
+def init_routes(app):
+    @app.route('/remove-bg', methods=['POST'])
+    def remove_background():
+        try:
+            image = request.files.get('image')
+            if not image:
+                return "No image uploaded", 400
+            
+            output = remove(image.read())  # Remove background
+            return send_file(io.BytesIO(output), mimetype='image/png')
 
-@combine_bp.route('/combine', methods=['POST'])
-def combine_images():
-    # Get uploaded images
-    image1 = request.files['image1']
-    image2 = request.files['image2']
+        except Exception as e:
+            print(f"❌ Error removing background: {e}")
+            return f"Internal Server Error: {e}", 500
 
-    # Open images with PIL
-    img1 = Image.open(image1).convert('RGB')
-    img2 = Image.open(image2).convert('RGB')
+    @app.route('/combine-images', methods=['POST'])
+    def combine():
+        try:
+            # Get images from the request
+            image1 = request.files.get('image1')
+            image2 = request.files.get('image2')
 
-    # Standard passport size in pixels (at 300 DPI): 2x2 inches = 600x600 pixels
-    # We'll use half width for each image: 300x600 pixels
-    passport_width = 600
-    passport_height = 600
-    half_width = passport_width // 2
+            if not image1 or not image2:
+                return "Both images are required", 400
 
-    # Resize images
-    img1 = img1.resize((half_width, passport_height), Image.Resampling.LANCZOS)
-    img2 = img2.resize((half_width, passport_height), Image.Resampling.LANCZOS)
+            # Open images using PIL
+            img1 = Image.open(image1).convert('RGBA')
+            img2 = Image.open(image2).convert('RGBA')
 
-    # Create a new blank image with passport size
-    combined = Image.new('RGB', (passport_width, passport_height))
+            # Resize images to the same size
+            img1 = img1.resize((300, 400), Image.LANCZOS)
+            img2 = img2.resize((300, 400), Image.LANCZOS)
 
-    # Paste both images side by side
-    combined.paste(img1, (0, 0))
-    combined.paste(img2, (half_width, 0))
+            # Create a blank canvas
+            combined = Image.new('RGBA', (600, 400))
 
-    # Save to bytes buffer
-    buffer = io.BytesIO()
-    combined.save(buffer, format="JPEG")
-    buffer.seek(0)
+            # Paste images at correct positions
+            combined.paste(img1, (0, 0), img1)  # Ensure transparency is maintained
+            combined.paste(img2, (300, 0), img2)  # Place second image correctly
 
-    return send_file(buffer, mimetype='image/jpeg')
+            # Save the output to a BytesIO object
+            output = io.BytesIO()
+            combined.save(output, format="PNG")
+            output.seek(0)  # Move cursor to the beginning
+
+            # Return the combined image
+            return send_file(output, mimetype="image/png")
+
+        except Exception as e:
+            print(f"❌ Error combining images: {e}")
+            return f"Internal Server Error: {e}", 500

@@ -5,7 +5,6 @@ import logging
 import subprocess
 from werkzeug.utils import secure_filename
 
-from backend.combined_photo import combine_bp
 from backend.customize_background import customize_bp
 from backend.pdf_compress import pdf_compress_bp 
 from backend.photo_resizer import photo_resizer_bp
@@ -13,6 +12,7 @@ from backend.webp_converter import convert_to_webp
 from backend.jpeg_converter import convert_to_jpeg
 from backend.png_converter import convert_to_png
 from backend.svg_converter import convert_to_svg
+from backend.combined_photo import init_routes  # Added this import
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -34,17 +34,21 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 os.makedirs(STATIC_FOLDER, exist_ok=True)
 os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
+os.makedirs(RESIZED_FOLDER, exist_ok=True) # Added this line to match config
 
 # Register Blueprints
-app.register_blueprint(combine_bp)
+
 app.register_blueprint(customize_bp)
 app.register_blueprint(pdf_compress_bp)
 app.register_blueprint(photo_resizer_bp)
 
+# Initialize combined_photo routes
+init_routes(app)  # Added this line to register /remove-bg and /combine-images
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1500 * 1024 * 1024  # Increased to 100MB
 
-# Serve static files
+# ------------ Serve static files
 @app.route('/robots.txt')
 def robots():
     return send_from_directory('static', 'robots.txt')
@@ -53,7 +57,7 @@ def robots():
 def sitemap():
     return send_from_directory('static', 'sitemap.xml')
 
-# Routes for different pages
+# ------------ Routes for different pages
 @app.route('/')
 def index():
     return render_template('customize-background.html')

@@ -1,2 +1,22 @@
 portriet - 378 x 567
 lanscape -738 x 390
+
+GCP Shell Command to build docker or project ------------------>
+gcloud builds submit --tag us-central1-docker.pkg.dev/cutcompress/cutcompress-repo/cutcompress-image:latest .
+
+if successfuly created Dockerfile then -->
+gcloud run deploy cutcompress-service \
+    --image=us-central1-docker.pkg.dev/cutcompress/cutcompress-repo/cutcompress-image:latest \
+    --platform=managed \
+    --region=us-central1 \
+    --allow-unauthenticated
+
+update time ------------>
+
+git pull origin main  # Pull latest changes
+
+gcloud builds submit --tag us-central1-docker.pkg.dev/cutcompress/cutcompress-repo/cutcompress-image:latest .
+
+gcloud run deploy cutcompress-service \
+    --image=us-central1-docker.pkg.dev/cutcompress/cutcompress-repo/cutcompress-image:latest \
+    --region=us-central1
