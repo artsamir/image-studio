@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, send_file, jsonify, send_from
 import os
 import io
 import logging
-import subprocess
 from werkzeug.utils import secure_filename
 
 from backend.customize_background import customize_bp
@@ -12,7 +11,8 @@ from backend.webp_converter import convert_to_webp
 from backend.jpeg_converter import convert_to_jpeg
 from backend.png_converter import convert_to_png
 from backend.svg_converter import convert_to_svg
-from backend.combined_photo import init_routes  # Added this import
+from backend.combined_photo import init_routes
+from backend.split_pdf import split_pdf_bp  # Import the Blueprint
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -30,25 +30,21 @@ RESIZED_FOLDER = "resized_images"
 ALLOWED_PDF_EXTENSIONS = {'pdf'}
 
 # Ensure required folders exist
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-os.makedirs(STATIC_FOLDER, exist_ok=True)
-os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
-os.makedirs(RESIZED_FOLDER, exist_ok=True) # Added this line to match config
+for folder in [UPLOAD_FOLDER, OUTPUT_FOLDER, STATIC_FOLDER, COMPRESSED_FOLDER, RESIZED_FOLDER]:
+    os.makedirs(folder, exist_ok=True)
 
 # Register Blueprints
-
 app.register_blueprint(customize_bp)
 app.register_blueprint(pdf_compress_bp)
 app.register_blueprint(photo_resizer_bp)
-
-# Initialize combined_photo routes
-init_routes(app)  # Added this line to register /remove-bg and /combine-images
+app.register_blueprint(split_pdf_bp, url_prefix='/split_pdf')  # Register the split_pdf Blueprint
+init_routes(app)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 1500 * 1024 * 1024  # Increased to 100MB
+app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 1500 * 1024 * 1024
 
-# ------------ Serve static files
+# ------------ Static file routes
 @app.route('/robots.txt')
 def robots():
     return send_from_directory('static', 'robots.txt')
@@ -57,7 +53,7 @@ def robots():
 def sitemap():
     return send_from_directory('static', 'sitemap.xml')
 
-# ------------ Routes for different pages
+# ------------ Page routes
 @app.route('/')
 def index():
     return render_template('customize-background.html')
@@ -73,6 +69,10 @@ def combined_photo():
 @app.route('/pdf-compress')
 def pdfcompress():
     return render_template('pdf-compress.html')
+
+@app.route('/split-pdf')
+def split_pdf_page():
+    return render_template('split-pdf.html')
 
 @app.route('/photo-resizer')
 def photoresizer():
@@ -106,15 +106,14 @@ def about():
 def send_static(path):
     return send_from_directory('static', path)
 
+# ------------ Image Conversion Routes
 @app.route('/convert-to-webp', methods=['POST'])
 def convert_images():
     try:
         files = request.files.getlist('images')
         if not files:
             return jsonify({'error': 'No files uploaded'}), 400
-
         zip_buffer = convert_to_webp(files)
-        
         return send_file(
             zip_buffer,
             mimetype='application/zip',
@@ -131,9 +130,7 @@ def convert_images_to_jpeg():
         files = request.files.getlist('images')
         if not files:
             return jsonify({'error': 'No files uploaded'}), 400
-
         zip_buffer = convert_to_jpeg(files)
-        
         return send_file(
             zip_buffer,
             mimetype='application/zip',
@@ -143,16 +140,14 @@ def convert_images_to_jpeg():
     except Exception as e:
         logger.error(f"Error in conversion: {str(e)}")
         return jsonify({'error': str(e)}), 500
-    
+
 @app.route('/convert-to-png', methods=['POST'])
 def convert_images_to_png():
     try:
         files = request.files.getlist('images')
         if not files:
             return jsonify({'error': 'No files uploaded'}), 400
-
         zip_buffer = convert_to_png(files)
-        
         return send_file(
             zip_buffer,
             mimetype='application/zip',
@@ -162,16 +157,14 @@ def convert_images_to_png():
     except Exception as e:
         logger.error(f"Error in conversion: {str(e)}")
         return jsonify({'error': str(e)}), 500
-    
+
 @app.route('/convert-to-svg', methods=['POST'])
 def convert_images_to_svg():
     try:
         files = request.files.getlist('images')
         if not files:
             return jsonify({'error': 'No files uploaded'}), 400
-
         zip_buffer = convert_to_svg(files)
-        
         return send_file(
             zip_buffer,
             mimetype='application/zip',
@@ -183,6 +176,5 @@ def convert_images_to_svg():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Use Railway's assigned port
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
