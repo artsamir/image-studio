@@ -1,11 +1,17 @@
-# Use an official Python runtime as the base image
+# Use official Python 3.11 slim image
 FROM python:3.11-slim
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies required for image processing
+# Install system & build dependencies
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    libffi-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libpython3-dev \
     libheif-examples \
     ghostscript \
     imagemagick \
@@ -13,18 +19,18 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements.txt first (optimization for caching)
+# Copy requirements first for caching
 COPY requirements.txt .
 
-# Install Python dependencies, including Gunicorn
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire project into the container
+# Copy project files
 COPY . .
 
-# Expose the port your app will run on
+# Expose port
 EXPOSE 5000
 
-# Command to run the app with Gunicorn
+# Start app with Gunicorn
 CMD gunicorn -w 2 -k gthread -b 0.0.0.0:$PORT main:app
-
