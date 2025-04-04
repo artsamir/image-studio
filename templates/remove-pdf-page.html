@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CutCompress - Free Background Remover, Image Resizer & PDF Compressor</title>
+    <title>CutCompress - Remove PDF Pages</title>
     <meta name="description" content="Remove image backgrounds, compress PDFs, and resize photos online for free. CutCompress offers fast and efficient tools for your needs.">
     <meta name="keywords" content="background remover, PDF compressor, image resizer, free online tools, remove background">
     <meta name="author" content="CutCompress">
@@ -12,8 +12,22 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/about-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar-body.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/remove-pdf-page-styles.css') }}">
+
+    <!-- <style>
+        .navbar {
+            position: sticky;
+            top: 0;
+            padding: 10px 33px;
+        }
+        
+        #content {
+            height: 2000px; /* Add lots of content for scrolling */
+        }
+    </style> -->
+
 </head>
 <body>
     <!-- ------------------------ Navbar Section ------------------------------------------- -->
@@ -50,8 +64,8 @@
                     <ul class="submenu">
                         <li><a href="{{ url_for('pdfcompress') }}">PDF Compression</a></li>
                         <li><a href="#">Merge PDF</a></li>
-                        <li><a href="{{ url_for('split_pdf_page')}}">Split PDF</a></li>
-                        <li><a href="#">Remove Pages</a></li>
+                        <li><a href="{{ url_for('split_pdf_page') }}">Split PDF</a></li>
+                        <li><a href="{{ url_for('remove_pdf_page') }}">Remove Pages</a></li>
                         <li><a href="#">Word to PDF</a></li>
                         <li><a href="#">Picture to PDF</a></li>
                         <li><a href="#">PowerPoint to PDF</a></li>
@@ -69,9 +83,35 @@
         </nav>
         <!-- Dark Overlay -->
         <div class="overlay" id="overlay"></div>
-    </header>
+    </header> 
 
-    
+    <div class="outer-container">
+        <div class="container">
+            <h1>PDF Page Remover</h1>
+            
+            <!-- Drag and Drop Area -->
+            <div id="dropZone" class="drop-zone">
+                <img src="{{ url_for('static', filename='site-images/upload-icon.png') }}" alt="Upload" class="upload-icon">
+                <p><strong>Drag & Drop your PDF here</strong> or <span class="browse-btn">Click to Upload</span></p>
+                <input type="file" id="pdfUpload" accept=".pdf" class="hidden">
+            </div>
+
+            <!-- Workspace Area -->
+            <div id="workspace" class="workspace hidden">
+                <h3>Workspace</h3>
+                <div id="pageContainer" class="page-container"></div>
+                <button id="createNewPdf" class="btn btn-primary hidden">Create New PDF</button>
+            </div>
+
+            <!-- Preview Area -->
+            <div id="preview" class="preview hidden">
+                <h3>Remaining Pages Preview</h3>
+                <div id="previewContainer" class="page-container"></div>
+                <a id="downloadLink" class="download-btn hidden" download="removed_pages.pdf">Download New PDF</a>
+            </div>
+        </div>
+    </div>
+
     <!-- -------------------------- Footer Part start here ---------------------------------------------- -->
     <footer>
         <div class="footer-container">
@@ -109,7 +149,8 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/about-script.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='js/navbar-body-script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/remove-pdf-page-script.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
 </body>
 </html>

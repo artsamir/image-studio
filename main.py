@@ -13,6 +13,7 @@ from backend.png_converter import convert_to_png
 from backend.svg_converter import convert_to_svg
 from backend.combined_photo import init_routes
 from backend.split_pdf import split_pdf_bp  # Import the Blueprint
+from backend.remove_pdf_page import remove_pdf_bp
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -38,6 +39,7 @@ app.register_blueprint(customize_bp)
 app.register_blueprint(pdf_compress_bp)
 app.register_blueprint(photo_resizer_bp)
 app.register_blueprint(split_pdf_bp, url_prefix='/split_pdf')  # Register the split_pdf Blueprint
+app.register_blueprint(remove_pdf_bp, url_prefix='/')
 init_routes(app)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -73,6 +75,10 @@ def pdfcompress():
 @app.route('/split-pdf')
 def split_pdf_page():
     return render_template('split-pdf.html')
+
+@app.route('/remove-pdf-page')
+def remove_pdf_page():
+    return render_template('remove-pdf-page.html')
 
 @app.route('/photo-resizer')
 def photoresizer():

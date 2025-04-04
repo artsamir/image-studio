@@ -28,9 +28,9 @@
                 <li class="has-submenu">
                     <a href="#">Image Studio <i class="fas fa-caret-down"></i></a>
                     <ul class="submenu">
+                        <li><a href="{{ url_for('combined_photo') }}">Combine Images</a></li>
                         <li><a href="{{ url_for('photoresizer') }}">Resize Photo</a></li>
                         <li><a href="{{ url_for('photoeditor') }}">Photo Editor</a></li>
-                        <li><a href="#">Combine Images</a></li>
                         <li><a href="#">Passport PrintReady</a></li>
                     </ul>
                 </li>
@@ -52,7 +52,7 @@
                     <ul class="submenu">
                         <li><a href="{{ url_for('pdfcompress') }}">PDF Compression</a></li>
                         <li><a href="#">Merge PDF</a></li>
-                        <li><a href="#">Split PDF</a></li>
+                        <li><a href="{{ url_for('split_pdf_page')}}">Split PDF</a></li>
                         <li><a href="#">Remove Pages</a></li>
                         <li><a href="#">Word to PDF</a></li>
                         <li><a href="#">Picture to PDF</a></li>

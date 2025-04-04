@@ -3,7 +3,6 @@ import os
 import subprocess
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -12,21 +11,14 @@ pdf_compress_bp = Blueprint('pdf_compress', __name__)
 UPLOAD_FOLDER = "static/uploads"
 COMPRESSED_FOLDER = "compressed_files"
 
-# Ensure required folders exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
-
-# Helper functions
-
-# def allowed_pdf_file(filename):
-#     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_PDF_EXTENSIONS
 
 def compress_pdf(input_path, output_path, dpi, target_size_kb=None):
     try:
         logger.info(f"Compressing {input_path} to {output_path} with DPI {dpi}, Target {target_size_kb} KB")
-        original_size = os.path.getsize(input_path) / 1024  # Convert to KB
+        original_size = os.path.getsize(input_path) / 1024
 
-        # Initial compression with given DPI
         cmd = [
             'gs',
             '-sDEVICE=pdfwrite',
@@ -41,7 +33,6 @@ def compress_pdf(input_path, output_path, dpi, target_size_kb=None):
         compressed_size = os.path.getsize(output_path) / 1024
         logger.info(f"Initial compression: {compressed_size:.2f} KB")
 
-        # Adjust compression if target size is given
         if target_size_kb:
             current_dpi = dpi
             temp_output = output_path + '.tmp'

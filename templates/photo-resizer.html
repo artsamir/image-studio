@@ -8,11 +8,9 @@
     <meta name="keywords" content="background remover, PDF compressor, image resizer, free online tools, remove background">
     <meta name="author" content="CutCompress">
 
-    <!-- External Links -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/photo-resizer-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar-body.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer-styles.css') }}">
 </head>
 <body>
@@ -26,9 +24,9 @@
                 <li class="has-submenu">
                     <a href="#">Image Studio <i class="fas fa-caret-down"></i></a>
                     <ul class="submenu">
+                        <li><a href="{{ url_for('combined_photo') }}">Combine Images</a></li>
                         <li><a href="{{ url_for('photoresizer') }}">Resize Photo</a></li>
                         <li><a href="{{ url_for('photoeditor') }}">Photo Editor</a></li>
-                        <li><a href="#">Combine Images</a></li>
                         <li><a href="#">Passport PrintReady</a></li>
                     </ul>
                 </li>
@@ -37,9 +35,9 @@
                     <a href="#">Convert Images <i class="fas fa-caret-down"></i></a>
                     <ul class="submenu">
                         <li><a href="{{ url_for('webp_converter') }}"><i>Image</i> to <b>WebP</b></a></li>
-                        <li><a href="#"><i>Image</i> to <b>JPEG</b></a></li>
-                        <li><a href="#"><i>Image</i> to <b>PNG</b></a></li>
-                        <li><a href="#"><i>Image</i> to <b>SVG</b></a></li>
+                        <li><a href="{{ url_for('jpeg_converter') }}"><i>Image</i> to <b>JPEG</b></a></li>
+                        <li><a href="{{ url_for('png_converter') }}"><i>Image</i> to <b>PNG</b></a></li>
+                        <li><a href="{{ url_for('svg_converter') }}"><i>Image</i> to <b>SVG</b></a></li>
                         <li><a href="#"><i>Image</i> to <b>TIFF</b></a></li>
                         <li><a href="#"><i>Image</i> to <b>PDF</b></a></li>
                         <li><a href="#"><i>Image</i> to <b>GIF</b></a></li>
@@ -50,7 +48,7 @@
                     <ul class="submenu">
                         <li><a href="{{ url_for('pdfcompress') }}">PDF Compression</a></li>
                         <li><a href="#">Merge PDF</a></li>
-                        <li><a href="#">Split PDF</a></li>
+                        <li><a href="{{ url_for('split_pdf_page')}}">Split PDF</a></li>
                         <li><a href="#">Remove Pages</a></li>
                         <li><a href="#">Word to PDF</a></li>
                         <li><a href="#">Picture to PDF</a></li>
@@ -70,6 +68,70 @@
         <!-- Dark Overlay -->
         <div class="overlay" id="overlay"></div>
     </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Image Resizer</h2>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="image">Upload Image</label>
+                        <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png,.webp" required>
+                        <div class="invalid-feedback">Please select an image file.</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="target_size">Target Size (KB)</label>
+                            <input type="number" id="target_size" name="target_size" min="1" placeholder="Enter target size" required>
+                            <div class="invalid-feedback">Please enter a valid target size.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dpi">DPI</label>
+                            <select id="dpi" name="dpi">
+                                <option value="72">72 DPI</option>
+                                <option value="150">150 DPI</option>
+                                <option value="300">300 DPI</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="width">Width (px)</label>
+                            <input type="number" id="width" name="width" min="1" placeholder="Enter width">
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (px)</label>
+                            <input type="number" id="height" name="height" min="1" placeholder="Enter height">
+                        </div>
+                    </div>
+
+                    <div class="preview-container hidden" id="original-preview-container">
+                        <h5>Original Preview</h5>
+                        <img id="original-preview" alt="Original Preview">
+                        <div id="originalImageInfo" class="image-info"></div>
+                    </div>
+
+                    <button type="submit" id="submitBtn">
+                        <span class="spinner hidden"></span>
+                        Resize Image
+                    </button>
+
+                    <div class="preview-container hidden" id="resized-preview-container">
+                        <h5>Resized Preview</h5>
+                        <img id="resized-preview" alt="Resized Preview">
+                        <div id="resizedImageInfo" class="image-info"></div>
+                        <button type="button" id="downloadBtn" class="hidden">Download Resized Image</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
 
     
     <!-- -------------------------- Footer Part start here ---------------------------------------------- -->
@@ -111,6 +173,6 @@
     
 
     <script src="{{ url_for('static', filename='js/photo-resizer-script.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='js/navbar-body-script.js') }}"></script>
 </body>
 </html>

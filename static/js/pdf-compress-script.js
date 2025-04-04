@@ -4,19 +4,21 @@ const dropText = document.getElementById('drop-text');
 const fileInfo = document.getElementById('file-info');
 const fileName = document.getElementById('file-name');
 const fileSize = document.getElementById('file-size');
-const preview = document.getElementById('preview');
-const pdfPreview = document.getElementById('pdf-preview');
+const originalPreview = document.getElementById('original-preview');
+const originalPdfPreview = document.getElementById('original-pdf-preview');
 const options = document.getElementById('options');
 const compressBtn = document.getElementById('compress-btn');
 const dpiSelect = document.getElementById('dpi');
 const targetSizeInput = document.getElementById('target-size');
-const result = document.getElementById('result');
-const originalSize = document.getElementById('original-size');
+const compressedPreview = document.getElementById('compressed-preview');
+const compressedPdfPreview = document.getElementById('compressed-pdf-preview');
+const compressedFileName = document.getElementById('compressed-file-name');
 const compressedSize = document.getElementById('compressed-size');
 const downloadBtn = document.getElementById('download-btn');
 const processing = document.getElementById('processing');
 
 let uploadedFilename = null;
+let compressedFileUrl = null;
 
 dropZone.addEventListener('click', () => {
     console.log("Drop zone clicked");
@@ -73,12 +75,11 @@ function uploadFile(file) {
         dropText.classList.add('hidden');
         fileInfo.classList.remove('hidden');
         options.classList.remove('hidden');
-        result.classList.add('hidden');
+        compressedPreview.classList.add('hidden');
 
-        // Show original file preview
         const previewUrl = URL.createObjectURL(file);
-        pdfPreview.src = previewUrl;
-        preview.classList.remove('hidden');
+        originalPdfPreview.src = previewUrl;
+        originalPreview.classList.remove('hidden');
     })
     .catch(error => {
         console.error('Upload Error:', error.message);
@@ -93,7 +94,7 @@ compressBtn.addEventListener('click', () => {
     }
 
     processing.classList.remove('hidden');
-    result.classList.add('hidden');
+    compressedPreview.classList.add('hidden');
 
     const data = {
         filename: uploadedFilename,
@@ -107,30 +108,44 @@ compressBtn.addEventListener('click', () => {
         body: JSON.stringify(data)
     })
     .then(response => {
+        console.log('Response status:', response.status);
         if (!response.ok) {
             return response.json().then(err => { throw new Error(err.error || `HTTP error: ${response.status}`); });
         }
         return response.json();
     })
     .then(data => {
+        console.log('Compression response:', data);
         processing.classList.add('hidden');
         if (data.error) {
             alert(data.error);
             return;
         }
-        originalSize.textContent = data.original_size;
+        
+        compressedFileName.textContent = 'compressed_' + uploadedFilename;
         compressedSize.textContent = data.compressed_size;
-        result.classList.remove('hidden');
-        downloadBtn.onclick = () => window.location.href = data.download_path;
-
-        // Show compressed file preview
-        const compressedPreviewUrl = `${window.location.origin}${data.download_path}`;
-        pdfPreview.src = compressedPreviewUrl;
-        preview.classList.remove('hidden');
+        // Use ?as_attachment=false for preview
+        compressedFileUrl = `${window.location.origin}${data.download_path}?as_attachment=false`;
+        compressedPdfPreview.src = compressedFileUrl;
+        compressedPreview.classList.remove('hidden');
+        originalPreview.classList.remove('hidden');
     })
     .catch(error => {
         processing.classList.add('hidden');
         console.error('Compression Error:', error.message);
         alert(`Compression failed: ${error.message}`);
     });
+});
+
+downloadBtn.addEventListener('click', () => {
+    if (compressedFileUrl) {
+        // Use ?as_attachment=true for download
+        const downloadUrl = compressedFileUrl.replace('as_attachment=false', 'as_attachment=true');
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = 'compressed_' + uploadedFilename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
 });

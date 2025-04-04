@@ -50,9 +50,9 @@
                     <a href="#">Convert Images <i class="fas fa-caret-down"></i></a>
                     <ul class="submenu">
                         <li><a href="{{ url_for('webp_converter') }}"><i>Image</i> to <b>WebP</b></a></li>
-                        <li><a href="#"><i>Image</i> to <b>JPEG</b></a></li>
-                        <li><a href="#"><i>Image</i> to <b>PNG</b></a></li>
-                        <li><a href="#"><i>Image</i> to <b>SVG</b></a></li>
+                        <li><a href="{{ url_for('jpeg_converter') }}"><i>Image</i> to <b>JPEG</b></a></li>
+                        <li><a href="{{ url_for('png_converter') }}"><i>Image</i> to <b>PNG</b></a></li>
+                        <li><a href="{{ url_for('svg_converter') }}"><i>Image</i> to <b>SVG</b></a></li>
                         <li><a href="#"><i>Image</i> to <b>TIFF</b></a></li>
                         <li><a href="#"><i>Image</i> to <b>PDF</b></a></li>
                         <li><a href="#"><i>Image</i> to <b>GIF</b></a></li>
@@ -63,7 +63,7 @@
                     <ul class="submenu">
                         <li><a href="{{ url_for('pdfcompress') }}">PDF Compression</a></li>
                         <li><a href="#">Merge PDF</a></li>
-                        <li><a href="#">Split PDF</a></li>
+                        <li><a href="{{ url_for('split_pdf_page')}}">Split PDF</a></li>
                         <li><a href="#">Remove Pages</a></li>
                         <li><a href="#">Word to PDF</a></li>
                         <li><a href="#">Picture to PDF</a></li>
@@ -83,6 +83,7 @@
         <!-- Dark Overlay -->
         <div class="overlay" id="overlay"></div>
     </header> 
+
     <div class="body-area">
         <div class="container">
             <h1>PDF Compressor</h1>
@@ -94,17 +95,19 @@
                 </div>
                 <input type="file" id="file-input" accept=".pdf" hidden>
             </div>
-            <div id="preview" class="preview hidden">
-                <h3>Preview</h3>
-                <iframe id="pdf-preview" width="100%" height="400px"></iframe>
+            
+            <div id="original-preview" class="preview hidden">
+                <h3>Original PDF Preview</h3>
+                <iframe id="original-pdf-preview" width="100%" height="400px"></iframe>
             </div>
+
             <div id="options" class="options hidden">
                 <label for="dpi">DPI:</label>
                 <select id="dpi">
-                    <option value="96">72 (Low Quality)</option>
-                    <option value="180">96</option>
+                    <option value="72">72 (Low Quality)</option>
+                    <option value="96">96</option>
                     <option value="180">180</option>
-                    <option value="180">300</option>
+                    <option value="300">300</option>
                     <option value="360">360</option>
                     <option value="600">600</option>
                     <option value="720">720 (High Quality)</option>
@@ -114,16 +117,90 @@
                 <input type="number" id="target-size" placeholder="e.g., 700">
                 <button id="compress-btn" class="compress-btn">Compress</button>
             </div>
-            <div id="result" class="result hidden">
-                <p>Original Size: <span id="original-size"></span></p>
-                <p>Compressed Size: <span id="compressed-size"></span></p>
+
+            <div id="compressed-preview" class="preview hidden">
+                <h3>Compressed PDF Preview</h3>
+                <iframe id="compressed-pdf-preview" width="100%" height="400px"></iframe>
+                <div class="file-info">
+                    <p>File: <span id="compressed-file-name"></span></p>
+                    <p>Size: <span id="compressed-size"></span></p>
+                </div>
                 <button id="download-btn" class="download-btn">Download</button>
             </div>
+
             <div id="processing" class="processing hidden">
                 <div class="spinner"></div>
                 <p>Processing...</p>
             </div>
         </div>
+    </div>
+
+    <!-- Blog Section -->
+    <div class="blog-container">
+        <h2>Why You Need PDF Compression and How CutCompress Helps</h2>
+        
+        <section class="blog-section">
+            <h3>Introduction: What’s the Big Deal About PDFs?</h3>
+            <p>PDFs are everywhere! Whether you're sending a school project, sharing a work report, or saving a favorite recipe, PDFs make it easy to keep things neat and shareable. But sometimes, these files get too big. A big PDF can be slow to send, hard to store, or tricky to open on your phone. That’s where PDF compression comes in—and our tool, CutCompress, makes it super simple for you! In this blog, we’ll explain why compressing PDFs is important, how CutCompress works, and why it’s perfect for everyone.</p>
+        </section>
+
+        <section class="blog-section">
+            <h3>Why Should You Compress PDFs?</h3>
+            <p>Imagine you’ve got a PDF with lots of pictures or pages—like a family photo album or a homework assignment with drawings. It might be 10 MB or more! Here’s why that’s a problem:</p>
+            <ul>
+                <li><strong>Takes Too Long to Share:</strong> Big files can take forever to email or upload to apps like WhatsApp or Google Drive.</li>
+                <li><strong>Fills Up Your Space:</strong> If you save lots of big PDFs on your phone or computer, you’ll run out of storage fast.</li>
+                <li><strong>Hard for Others:</strong> Friends or teachers might struggle to download or open a huge file, especially on slow internet.</li>
+            </ul>
+            <p>Compressing a PDF makes it smaller without losing what’s inside—like shrinking a big backpack into a tiny bag that still holds everything! With CutCompress, you can make your PDFs small and easy to use.</p>
+        </section>
+
+        <section class="blog-section">
+            <h3>How Does CutCompress Work?</h3>
+            <p>CutCompress is like a magic shrink ray for PDFs. You don’t need to be a tech expert to use it—just a few clicks, and you’re done! Here’s how it works:</p>
+            <ol>
+                <li><strong>Upload Your PDF:</strong> Drag your file to the box on our website or click to pick it from your device. It’s as easy as picking a photo to share!</li>
+                <li><strong>Choose Your Settings:</strong> You can pick a DPI (dots per inch) number—like 72 for basic quality or 300 for super clear. You can also type a size (like 700 KB) if you want it exact.</li>
+                <li><strong>Press Compress:</strong> Hit the “Compress” button, and watch the magic happen. You’ll see a little spinning circle while it works.</li>
+                <li><strong>See the Result:</strong> After a moment, you’ll get a preview of your smaller PDF with its new size and name. If you like it, click “Download” to save it!</li>
+            </ol>
+            <p>It’s fast, free, and works on any device—phone, tablet, or computer. No complicated steps, just simple fun!</p>
+        </section>
+
+        <section class="blog-section">
+            <h3>Benefits of Using CutCompress</h3>
+            <p>Why pick CutCompress over other tools? Here are some cool things it does for you:</p>
+            <ul>
+                <li><strong>Saves Time:</strong> Smaller PDFs send faster, so you’re not waiting around.</li>
+                <li><strong>Keeps Quality:</strong> Even when it shrinks, your PDF still looks good—text stays readable, and pictures don’t get blurry.</li>
+                <li><strong>Free for Everyone:</strong> No need to pay or sign up. Anyone can use it anytime!</li>
+                <li><strong>Easy to Understand:</strong> The buttons and options are clear, so kids, parents, or grandparents can all figure it out.</li>
+                <li><strong>Works Anywhere:</strong> Use it at home, school, or work—on Wi-Fi or even slow data.</li>
+            </ul>
+            <p>Whether you’re a student emailing homework, a parent sharing recipes, or a worker sending reports, CutCompress makes your life easier.</p>
+        </section>
+
+        <section class="blog-section">
+            <h3>Real-Life Examples</h3>
+            <p>Let’s see how CutCompress helps in real situations:</p>
+            <ul>
+                <li><strong>School Projects:</strong> Say you made a 20-page PDF with drawings and photos for class. It’s 15 MB—too big for your teacher’s email! Compress it to 2 MB with CutCompress, and it sends in seconds.</li>
+                <li><strong>Family Fun:</strong> You scanned old family letters into a PDF, but it’s 30 MB. Shrink it to 5 MB, and now everyone can open it on their phones.</li>
+                <li><strong>Work Stuff:</strong> Your boss needs a report fast, but it’s 10 MB. CutCompress gets it down to 1 MB, and you’re the hero of the day!</li>
+            </ul>
+            <p>No matter who you are, CutCompress fits your needs like a perfect puzzle piece.</p>
+        </section>
+
+        <section class="blog-section">
+            <h3>Tips and Final Thoughts</h3>
+            <p>Here are some quick tips to get the best from CutCompress:</p>
+            <ul>
+                <li><strong>Pick the Right DPI:</strong> Use 72 or 96 for simple PDFs (like text), and 300 or more if you need sharp pictures.</li>
+                <li><strong>Check Your Size:</strong> If you want a tiny file, set a low target size like 500 KB. For better quality, go higher.</li>
+                <li><strong>Try It Out:</strong> Upload a PDF and play with the settings—it’s free, so have fun experimenting!</li>
+            </ul>
+            <p>In the end, CutCompress is all about making PDFs work for you. Big files don’t have to slow you down anymore. With our tool, you can shrink them, share them, and store them without a worry. So next time your PDF is too big, head to CutCompress and let us help—it’s as easy as 1-2-3!</p>
+        </section>
     </div>
 
     <!-- -------------------------- Footer Part start here ---------------------------------------------- -->

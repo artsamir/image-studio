@@ -16,15 +16,34 @@ RESIZED_FOLDER = "resized_images"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESIZED_FOLDER, exist_ok=True)
 
-def resize_image(input_path, output_path, width, height):
+def resize_image(input_path, output_path, width=None, height=None, target_size=None, dpi=72):
     try:
-        logger.info(f"Resizing {input_path} to {width}x{height} pixels")
         with Image.open(input_path) as img:
-            img = img.resize((width, height), Image.ANTIALIAS)
-            img.save(output_path, quality=90)
-        resized_size = os.path.getsize(output_path) / 1024  # Convert to KB
-        logger.info(f"Resized image saved: {output_path}, Size: {resized_size:.2f} KB")
-        return resized_size
+            # Convert to RGB if necessary
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+            
+            # Get original dimensions if width/height not provided
+            orig_width, orig_height = img.size
+            width = width or orig_width
+            height = height or orig_height
+
+            # Resize image
+            logger.info(f"Resizing {input_path} to {width}x{height} pixels")
+            img = img.resize((width, height), Image.Resampling.LANCZOS)
+            
+            # Adjust quality to meet target size (if provided)
+            quality = 90
+            img.save(output_path, quality=quality, dpi=(dpi, dpi))
+            
+            if target_size:
+                while os.path.getsize(output_path) / 1024 > target_size and quality > 5:
+                    quality -= 5
+                    img.save(output_path, quality=quality, dpi=(dpi, dpi))
+            
+            resized_size = os.path.getsize(output_path) / 1024  # Convert to KB
+            logger.info(f"Resized image saved: {output_path}, Size: {resized_size:.2f} KB")
+            return resized_size
     except Exception as e:
         logger.error(f"Error resizing image: {str(e)}")
         raise Exception(f"Resizing failed: {str(e)}")
@@ -33,10 +52,10 @@ def resize_image(input_path, output_path, width, height):
 def upload_file():
     try:
         logger.info("Received image upload request")
-        if 'file' not in request.files:
+        if 'image' not in request.files:
             logger.error("No file part in request")
             return jsonify({'error': 'No file part in the request'}), 400
-        file = request.files['file']
+        file = request.files['image']
         if file.filename == '':
             logger.error("No file selected")
             return jsonify({'error': 'No file selected'}), 400
@@ -57,22 +76,34 @@ def upload_file():
 @photo_resizer_bp.route('/resize', methods=['POST'])
 def resize_file():
     try:
-        data = request.get_json()
-        filename = data['filename']
-        width = int(data['width'])
-        height = int(data['height'])
+        if 'image' not in request.files:
+            logger.error("No image file in request")
+            return jsonify({'error': 'No image file provided'}), 400
         
-        input_path = os.path.join(UPLOAD_FOLDER, filename)
-        output_filename = f"resized_{width}x{height}_" + filename
+        file = request.files['image']
+        if file.filename == '':
+            logger.error("No file selected")
+            return jsonify({'error': 'No file selected'}), 400
+
+        # Save the uploaded file
+        input_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        file.save(input_path)
+
+        # Get form data
+        width = request.form.get('width', type=int)
+        height = request.form.get('height', type=int)
+        target_size = request.form.get('target_size', type=int)
+        dpi = request.form.get('dpi', default=72, type=int)
+
+        # Generate output filename
+        output_filename = f"resized_{file.filename}"
         output_path = os.path.join(RESIZED_FOLDER, output_filename)
         
-        resized_size = resize_image(input_path, output_path, width, height)
+        # Resize the image
+        resized_size = resize_image(input_path, output_path, width, height, target_size, dpi)
         
         logger.info(f"Resizing complete: Resized size {resized_size:.2f} KB")
-        return jsonify({
-            'resized_size': f'{resized_size:.2f} KB',
-            'download_path': f'/download/{output_filename}'
-        })
+        return send_from_directory(RESIZED_FOLDER, output_filename, as_attachment=True)
     except Exception as e:
         logger.error(f"Resizing route error: {str(e)}")
         return jsonify({'error': str(e)}), 500

@@ -1,0 +1,254 @@
+/* General Container Styles */
+.outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px - 200px); /* Adjust based on navbar and footer height */
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Drop Zone Styles */
+.drop-zone {
+    border: 3px dashed #007bff;
+    padding: 40px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.drop-zone.dragover {
+    background-color: #e1f0ff;
+    border-color: #0056b3;
+}
+
+.drop-zone .upload-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.drop-zone p {
+    font-size: 1.2em;
+    color: #555;
+    margin: 0;
+}
+
+.drop-zone .browse-btn {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.drop-zone .browse-btn:hover {
+    color: #0056b3;
+}
+
+.hidden {
+    display: none;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+/* Workspace Styles */
+.workspace {
+    margin-top: 30px;
+}
+
+.workspace h3 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.page-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.page-item {
+    position: relative;
+    width: 210px;
+    height: 297px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.page-item .page-number {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.page-item .delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    color: #ff4444;
+    font-size: 1.2em;
+    transition: color 0.3s ease;
+}
+
+.page-item .delete-icon:hover {
+    color: #cc0000;
+}
+
+.page-item.removed {
+    opacity: 0.5;
+    filter: blur(2px);
+}
+
+.page-item.removed::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.page-item canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Preview Styles */
+.preview {
+    margin-top: 30px;
+}
+
+.preview h3 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.preview-item {
+    position: relative;
+    width: 210px;
+    height: 297px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.preview-item .page-number {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.preview-item canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.download-btn {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .drop-zone {
+        padding: 30px;
+    }
+
+    .page-item, .preview-item {
+        width: 150px;
+        height: 212px;
+    }
+
+    .workspace h3, .preview h3 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .drop-zone {
+        padding: 20px;
+    }
+
+    .drop-zone p {
+        font-size: 1em;
+    }
+
+    .page-item, .preview-item {
+        width: 120px;
+        height: 170px;
+    }
+}

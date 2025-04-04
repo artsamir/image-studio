@@ -37,11 +37,10 @@
                 <a href="#">Convert Images <i class="fas fa-caret-down"></i></a>
                 <ul class="submenu">
                     <li><a href="{{ url_for('webp_converter') }}"><i>Image</i> to <b>WebP</b></a></li>
-                    <li><a href="#"><i>Image</i> to <b>JPEG</b></a></li>
-                    <li><a href="#"><i>Image</i> to <b>PNG</b></a></li>
-                    <li><a href="#"><i>Image</i> to <b>SVG</b></a></li>
+                    <li><a href="{{ url_for('jpeg_converter') }}"><i>Image</i> to <b>JPEG</b></a></li>
+                    <li><a href="{{ url_for('png_converter') }}"><i>Image</i> to <b>PNG</b></a></li>
+                    <li><a href="{{ url_for('svg_converter') }}"><i>Image</i> to <b>SVG</b></a></li>
                     <li><a href="#"><i>Image</i> to <b>TIFF</b></a></li>
-                    <li><a href="#"><i>Image</i> to <b>ICO</b></a></li>
                     <li><a href="#"><i>Image</i> to <b>PDF</b></a></li>
                     <li><a href="#"><i>Image</i> to <b>GIF</b></a></li>
                 </ul>
@@ -51,7 +50,7 @@
                 <ul class="submenu">
                     <li><a href="{{ url_for('pdfcompress') }}">PDF Compression</a></li>
                     <li><a href="#">Merge PDF</a></li>
-                    <li><a href="#">Split PDF</a></li>
+                    <li><a href="{{ url_for('split_pdf_page')}}">Split PDF</a></li>
                     <li><a href="#">Remove Pages</a></li>
                     <li><a href="#">Word to PDF</a></li>
                     <li><a href="#">Picture to PDF</a></li>
