@@ -38,7 +38,7 @@ pillow==11.1.0
 pillow_heif==0.21.0
 platformdirs==4.3.6
 pooch==1.8.2
-protobuf==5.29.3
+protobuf==5.29.5
 pycparser==2.22
 PyMatting==1.1.13
 pypdf==5.3.1
